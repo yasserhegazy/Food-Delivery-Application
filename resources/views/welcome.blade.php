@@ -11,7 +11,7 @@
     <body class="antialiased font-sans text-gray-900 bg-white">
         
         <!-- Navigation -->
-        <nav x-data="{ open: false }" class="absolute w-full z-50 transition-all duration-300" :class="{ 'bg-white/90 backdrop-blur-md shadow-sm py-2': open || window.scrollY > 10, 'bg-transparent py-4': !open && window.scrollY <= 10 }" @scroll.window="open = (window.scrollY > 10)">
+        <nav x-data="{ open: false, scrolled: window.scrollY > 10 }" class="absolute w-full z-50 transition-all duration-300" :class="{ 'bg-white/90 backdrop-blur-md shadow-sm py-2': open || scrolled, 'bg-transparent py-4': !open && !scrolled }" @scroll.window="scrolled = (window.scrollY > 10)">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
                     <!-- Logo -->
@@ -62,17 +62,31 @@
             </div>
 
             <!-- Mobile Menu -->
-            <div :class="{'block': open, 'hidden': !open}" class="md:hidden bg-white border-t border-gray-100 shadow-lg">
-                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50">Home</a>
-                    <a href="#how-it-works" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50">How it Works</a>
-                    <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50">Features</a>
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50">Log in</a>
-                        <a href="{{ route('register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-orange-500 font-bold bg-orange-50">Sign Up</a>
-                    @endauth
+            <!-- Mobile Menu -->
+            <div x-show="open" 
+                 @click.away="open = false"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 -translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 -translate-y-2"
+                 class="md:hidden bg-white border-t border-gray-100 shadow-xl absolute w-full left-0 top-16 z-40 rounded-b-2xl">
+                <div class="px-4 pt-4 pb-6 space-y-2">
+                    <a href="#" @click="open = false" class="block px-4 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors">Home</a>
+                    <a href="#how-it-works" @click="open = false" class="block px-4 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors">How it Works</a>
+                    <a href="#features" @click="open = false" class="block px-4 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors">Features</a>
+                    
+                    <div class="border-t border-gray-100 my-2 pt-2">
+                        @auth
+                            <a href="{{ url('/dashboard') }}" class="block px-4 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors">Dashboard</a>
+                        @else
+                            <a href="{{ route('login') }}" class="block px-4 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors">Log in</a>
+                            <a href="{{ route('register') }}" class="block w-full text-center mt-4 px-4 py-3 rounded-xl text-base font-bold text-white bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-500/30 transition-all transform active:scale-95">
+                                Sign Up
+                            </a>
+                        @endauth
+                    </div>
                 </div>
             </div>
         </nav>
