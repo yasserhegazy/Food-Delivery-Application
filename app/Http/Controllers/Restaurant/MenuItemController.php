@@ -94,8 +94,11 @@ class MenuItemController extends Controller
     {
         $restaurant = auth()->user()->restaurant;
         
+        // Load category relationship
+        $menuItem->load('category');
+        
         // Ensure the menu item belongs to the authenticated user's restaurant
-        if ($menuItem->category->restaurant_id !== $restaurant->id) {
+        if (!$menuItem->category || $menuItem->category->restaurant_id !== $restaurant->id) {
             abort(403);
         }
 
@@ -110,6 +113,9 @@ class MenuItemController extends Controller
     public function update(MenuItemRequest $request, MenuItem $menuItem)
     {
         $restaurant = auth()->user()->restaurant;
+        
+        // Load category relationship
+        $menuItem->load('category');
         
         // Ensure the menu item belongs to the authenticated user's restaurant
         if ($menuItem->category->restaurant_id !== $restaurant->id) {
@@ -142,8 +148,11 @@ class MenuItemController extends Controller
     {
         $restaurant = auth()->user()->restaurant;
         
+        // Load category relationship
+        $menuItem->load('category');
+        
         // Ensure the menu item belongs to the authenticated user's restaurant
-        if ($menuItem->category->restaurant_id !== $restaurant->id) {
+        if (!$menuItem->category || $menuItem->category->restaurant_id !== $restaurant->id) {
             abort(403);
         }
 
@@ -165,6 +174,9 @@ class MenuItemController extends Controller
     public function toggleAvailability(MenuItem $menuItem)
     {
         $restaurant = auth()->user()->restaurant;
+        
+        // Load category relationship
+        $menuItem->load('category');
         
         // Ensure the menu item belongs to the authenticated user's restaurant
         if ($menuItem->category->restaurant_id !== $restaurant->id) {
