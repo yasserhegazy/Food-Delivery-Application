@@ -90,19 +90,25 @@ class MenuItemController extends Controller
     /**
      * Show the form for editing the specified menu item.
      */
-    public function edit(MenuItem $menuItem)
+    public function edit(MenuItem $menu)
     {
         $restaurant = auth()->user()->restaurant;
         
-        // Load category relationship
-        $menuItem->load('category');
+        if (!$restaurant) {
+            return redirect()->route('restaurant.profile.edit')
+                ->with('error', 'Please create your restaurant profile first.');
+        }
         
-        // Ensure the menu item belongs to the authenticated user's restaurant
-        if (!$menuItem->category || $menuItem->category->restaurant_id !== $restaurant->id) {
-            abort(403);
+        // Load category to verify ownership
+        $menu->load('category');
+        
+        // Verify the menu item belongs to a category owned by this restaurant
+        if (!$menu->category || $menu->category->restaurant_id !== $restaurant->id) {
+            abort(403, 'Unauthorized access to this menu item.');
         }
 
         $categories = $restaurant->categories;
+        $menuItem = $menu; // For backward compatibility with view
 
         return view('restaurant.menu.edit', compact('menuItem', 'categories'));
     }
@@ -110,16 +116,21 @@ class MenuItemController extends Controller
     /**
      * Update the specified menu item.
      */
-    public function update(MenuItemRequest $request, MenuItem $menuItem)
+    public function update(MenuItemRequest $request, MenuItem $menu)
     {
         $restaurant = auth()->user()->restaurant;
         
-        // Load category relationship
-        $menuItem->load('category');
+        if (!$restaurant) {
+            return redirect()->route('restaurant.profile.edit')
+                ->with('error', 'Please create your restaurant profile first.');
+        }
         
-        // Ensure the menu item belongs to the authenticated user's restaurant
-        if ($menuItem->category->restaurant_id !== $restaurant->id) {
-            abort(403);
+        // Load category to verify ownership
+        $menu->load('category');
+        
+        // Verify the menu item belongs to a category owned by this restaurant
+        if (!$menu->category || $menu->category->restaurant_id !== $restaurant->id) {
+            abort(403, 'Unauthorized access to this menu item.');
         }
 
         $data = $request->validated();
@@ -128,13 +139,13 @@ class MenuItemController extends Controller
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($menuItem->image) {
-                Storage::disk('public')->delete($menuItem->image);
+            if ($menu->image) {
+                Storage::disk('public')->delete($menu->image);
             }
             $data['image'] = $request->file('image')->store('menu-items', 'public');
         }
 
-        $menuItem->update($data);
+        $menu->update($data);
 
         return redirect()
             ->route('restaurant.menu.index')
@@ -144,24 +155,24 @@ class MenuItemController extends Controller
     /**
      * Remove the specified menu item.
      */
-    public function destroy(MenuItem $menuItem)
+    public function destroy(MenuItem $menu)
     {
         $restaurant = auth()->user()->restaurant;
         
-        // Load category relationship
-        $menuItem->load('category');
+        if (!$restaurant) {
+            return redirect()->route('restaurant.profile.edit')
+                ->with('error', 'Please create your restaurant profile first.');
+        }
         
-        // Ensure the menu item belongs to the authenticated user's restaurant
-        if (!$menuItem->category || $menuItem->category->restaurant_id !== $restaurant->id) {
-            abort(403);
+        // Load category to verify ownership
+        $menu->load('category');
+        
+        // Verify the menu item belongs to a category owned by this restaurant
+        if (!$menu->category || $menu->category->restaurant_id !== $restaurant->id) {
+            abort(403, 'Unauthorized access to this menu item.');
         }
 
-        // Delete image
-        if ($menuItem->image) {
-            Storage::disk('public')->delete($menuItem->image);
-        }
-
-        $menuItem->delete();
+        $menu->delete();
 
         return redirect()
             ->route('restaurant.menu.index')
@@ -171,23 +182,27 @@ class MenuItemController extends Controller
     /**
      * Toggle menu item availability.
      */
-    public function toggleAvailability(MenuItem $menuItem)
+    public function toggleAvailability(MenuItem $menu)
     {
         $restaurant = auth()->user()->restaurant;
         
-        // Load category relationship
-        $menuItem->load('category');
+        if (!$restaurant) {
+            return response()->json(['error' => 'Restaurant profile not found'], 403);
+        }
         
-        // Ensure the menu item belongs to the authenticated user's restaurant
-        if ($menuItem->category->restaurant_id !== $restaurant->id) {
-            abort(403);
+        // Load category to verify ownership
+        $menu->load('category');
+        
+        // Verify the menu item belongs to a category owned by this restaurant
+        if (!$menu->category || $menu->category->restaurant_id !== $restaurant->id) {
+            return response()->json(['error' => 'Unauthorized access to this menu item.'], 403);
         }
 
-        $menuItem->toggleAvailability();
+        $menu->toggleAvailability();
 
         return response()->json([
             'success' => true,
-            'is_available' => $menuItem->is_available,
+            'is_available' => $menu->is_available,
             'message' => 'Availability updated successfully!'
         ]);
     }
