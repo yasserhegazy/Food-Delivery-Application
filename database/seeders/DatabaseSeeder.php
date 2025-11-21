@@ -15,9 +15,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed roles and permissions
         $this->call([
             RolePermissionSeeder::class,
             AdminUserSeeder::class,
+        ]);
+
+        // Seed restaurant data
+        $this->call([
+            RestaurantSeeder::class,
+            CategorySeeder::class,
+            MenuItemSeeder::class,
         ]);
     }
 }
