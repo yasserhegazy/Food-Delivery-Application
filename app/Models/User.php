@@ -58,6 +58,7 @@ class User extends Authenticatable
         ];
     }
 
+
     /**
      * Get the role relationship.
      */
@@ -65,6 +66,15 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role', 'slug');
     }
+
+    /**
+     * Get the restaurant relationship (for restaurant owners).
+     */
+    public function restaurant()
+    {
+        return $this->hasOne(\App\Models\Restaurant::class);
+    }
+
 
     /**
      * Check if user has a specific role.
