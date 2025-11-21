@@ -9,11 +9,14 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 
+// Public routes
+Route::get('/', function () {
+    return view('welcome');
+});
+
 // Guest routes (authentication)
 Route::middleware('guest')->group(function () {
-    Route::get('/', function () {
-        return redirect()->route('login');
-    });
+
     
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
