@@ -42,14 +42,17 @@
                                     My Orders
                                 </a>
                             @elseif(auth()->user()->isRestaurantOwner())
-                                <a href="{{ route('restaurant.dashboard') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 {{ request()->routeIs('restaurant.dashboard') ? 'border-orange-500' : 'border-transparent hover:border-gray-300' }}">
+                                <a href="{{ route('restaurant.dashboard') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('restaurant.dashboard') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
                                     Dashboard
                                 </a>
-                                <a href="#" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-gray-300">
+                                <a href="{{ route('restaurant.menu.index') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('restaurant.menu.*') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
                                     Menu
                                 </a>
-                                <a href="#" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-gray-300">
-                                    Orders
+                                <a href="{{ route('restaurant.categories.index') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('restaurant.categories.*') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
+                                    Categories
+                                </a>
+                                <a href="{{ route('restaurant.profile.edit') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('restaurant.profile.*') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
+                                    Profile
                                 </a>
                             @elseif(auth()->user()->isDriver())
                                 <a href="{{ route('driver.dashboard') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 {{ request()->routeIs('driver.dashboard') ? 'border-orange-500' : 'border-transparent hover:border-gray-300' }}">
