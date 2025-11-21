@@ -17,8 +17,8 @@ class MenuItemSeeder extends Seeder
         $menuItems = [
             // Pizza Paradise
             'Pizzas' => [
-                ['name' => 'Margherita Pizza', 'price' => 12.99, 'description' => 'Classic tomato sauce, mozzarella, and fresh basil', 'preparation_time' => 15],
-                ['name' => 'Pepperoni Pizza', 'price' => 14.99, 'description' => 'Loaded with premium pepperoni and extra cheese', 'preparation_time' => 15],
+                ['name' => 'Margherita Pizza', 'price' => 12.99, 'description' => 'Classic tomato sauce, mozzarella, and fresh basil', 'preparation_time' => 15, 'image' => 'menu-items/margherita-pizza.png'],
+                ['name' => 'Pepperoni Pizza', 'price' => 14.99, 'description' => 'Loaded with premium pepperoni and extra cheese', 'preparation_time' => 15, 'image' => 'menu-items/pepperoni-pizza.png'],
                 ['name' => 'Vegetarian Supreme', 'price' => 15.99, 'description' => 'Bell peppers, mushrooms, onions, olives, and tomatoes', 'preparation_time' => 18],
                 ['name' => 'Meat Lovers', 'price' => 17.99, 'discount_price' => 14.99, 'description' => 'Pepperoni, sausage, bacon, and ham', 'preparation_time' => 20, 'is_featured' => true],
             ],
@@ -29,10 +29,10 @@ class MenuItemSeeder extends Seeder
             
             // Burger House
             'Burgers' => [
-                ['name' => 'Classic Burger', 'price' => 9.99, 'description' => 'Beef patty, lettuce, tomato, onion, pickles', 'preparation_time' => 12],
+                ['name' => 'Classic Burger', 'price' => 9.99, 'description' => 'Beef patty, lettuce, tomato, onion, pickles', 'preparation_time' => 12, 'image' => 'menu-items/classic-burger.png'],
                 ['name' => 'Cheese Burger', 'price' => 10.99, 'description' => 'Classic burger with melted cheddar cheese', 'preparation_time' => 12],
                 ['name' => 'Bacon Burger', 'price' => 12.99, 'description' => 'Topped with crispy bacon and BBQ sauce', 'preparation_time' => 15],
-                ['name' => 'Truffle Burger', 'price' => 16.99, 'discount_price' => 13.99, 'description' => 'Premium beef with truffle aioli and arugula', 'preparation_time' => 18, 'is_featured' => true],
+                ['name' => 'Truffle Burger', 'price' => 16.99, 'discount_price' => 13.99, 'description' => 'Premium beef with truffle aioli and arugula', 'preparation_time' => 18, 'is_featured' => true, 'image' => 'menu-items/truffle-burger.png'],
             ],
             'Sides' => [
                 ['name' => 'French Fries', 'price' => 3.99, 'description' => 'Crispy golden fries', 'preparation_time' => 8],
@@ -45,14 +45,14 @@ class MenuItemSeeder extends Seeder
                 ['name' => 'Tuna Nigiri', 'price' => 6.99, 'description' => 'Premium tuna over seasoned rice (2 pieces)', 'preparation_time' => 5],
             ],
             'Rolls' => [
-                ['name' => 'California Roll', 'price' => 8.99, 'description' => 'Crab, avocado, cucumber (8 pieces)', 'preparation_time' => 10],
+                ['name' => 'California Roll', 'price' => 8.99, 'description' => 'Crab, avocado, cucumber (8 pieces)', 'preparation_time' => 10, 'image' => 'menu-items/sushi-roll.png'],
                 ['name' => 'Spicy Tuna Roll', 'price' => 10.99, 'description' => 'Spicy tuna, cucumber, scallions (8 pieces)', 'preparation_time' => 12],
                 ['name' => 'Dragon Roll', 'price' => 14.99, 'discount_price' => 11.99, 'description' => 'Eel, cucumber, avocado topping (8 pieces)', 'preparation_time' => 15, 'is_featured' => true],
             ],
             
             // Taco Fiesta
             'Tacos' => [
-                ['name' => 'Beef Tacos', 'price' => 8.99, 'description' => 'Seasoned beef with fresh toppings (3 tacos)', 'preparation_time' => 10],
+                ['name' => 'Beef Tacos', 'price' => 8.99, 'description' => 'Seasoned beef with fresh toppings (3 tacos)', 'preparation_time' => 10, 'image' => 'menu-items/tacos.png'],
                 ['name' => 'Chicken Tacos', 'price' => 8.99, 'description' => 'Grilled chicken with pico de gallo (3 tacos)', 'preparation_time' => 10],
                 ['name' => 'Fish Tacos', 'price' => 10.99, 'description' => 'Crispy fish with cabbage slaw (3 tacos)', 'preparation_time' => 12, 'is_featured' => true],
             ],
@@ -83,6 +83,7 @@ class MenuItemSeeder extends Seeder
                         'price' => $itemData['price'],
                         'discount_price' => $itemData['discount_price'] ?? null,
                         'preparation_time' => $itemData['preparation_time'] ?? 15,
+                        'image' => $itemData['image'] ?? null,
                         'is_available' => true,
                         'is_featured' => $itemData['is_featured'] ?? false,
                         'sort_order' => $index,
