@@ -14,6 +14,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Public restaurant routes
+Route::get('/restaurants', [App\Http\Controllers\PublicRestaurantController::class, 'index'])->name('restaurants.index');
+Route::get('/restaurants/{slug}', [App\Http\Controllers\PublicRestaurantController::class, 'show'])->name('restaurants.show');
+
+
 // Guest routes (authentication)
 Route::middleware('guest')->group(function () {
 
@@ -40,6 +45,20 @@ Route::middleware('auth')->group(function () {
     // Restaurant owner routes
     Route::middleware(CheckRole::class . ':restaurant_owner')->prefix('restaurant')->name('restaurant.')->group(function () {
         Route::get('/dashboard', [RestaurantDashboardController::class, 'index'])->name('dashboard');
+        
+        // Restaurant Profile
+        Route::get('/profile/edit', [App\Http\Controllers\Restaurant\RestaurantProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [App\Http\Controllers\Restaurant\RestaurantProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profile/logo', [App\Http\Controllers\Restaurant\RestaurantProfileController::class, 'uploadLogo'])->name('profile.logo');
+        Route::post('/profile/cover', [App\Http\Controllers\Restaurant\RestaurantProfileController::class, 'uploadCover'])->name('profile.cover');
+        
+        // Categories
+        Route::resource('categories', App\Http\Controllers\Restaurant\CategoryController::class);
+        Route::post('/categories/reorder', [App\Http\Controllers\Restaurant\CategoryController::class, 'reorder'])->name('categories.reorder');
+        
+        // Menu Items
+        Route::resource('menu', App\Http\Controllers\Restaurant\MenuItemController::class);
+        Route::post('/menu/{menuItem}/toggle', [App\Http\Controllers\Restaurant\MenuItemController::class, 'toggleAvailability'])->name('menu.toggle');
     });
     
     // Driver routes
