@@ -23,20 +23,20 @@ class MenuItemSeeder extends Seeder
                 ['name' => 'Meat Lovers', 'price' => 17.99, 'discount_price' => 14.99, 'description' => 'Pepperoni, sausage, bacon, and ham', 'preparation_time' => 20, 'is_featured' => true],
             ],
             'Appetizers' => [
-                ['name' => 'Garlic Bread', 'price' => 5.99, 'description' => 'Toasted bread with garlic butter and herbs', 'preparation_time' => 8],
-                ['name' => 'Mozzarella Sticks', 'price' => 7.99, 'description' => 'Crispy breaded mozzarella with marinara sauce', 'preparation_time' => 10],
+                ['name' => 'Garlic Bread', 'price' => 5.99, 'description' => 'Toasted bread with garlic butter and herbs', 'preparation_time' => 8, 'image' => 'menu-items/garlic-bread.png'],
+                ['name' => 'Mozzarella Sticks', 'price' => 7.99, 'description' => 'Crispy breaded mozzarella with marinara sauce', 'preparation_time' => 10, 'image' => 'menu-items/mozzarella-sticks.png'],
             ],
             
             // Burger House
             'Burgers' => [
                 ['name' => 'Classic Burger', 'price' => 9.99, 'description' => 'Beef patty, lettuce, tomato, onion, pickles', 'preparation_time' => 12, 'image' => 'menu-items/classic-burger.png'],
-                ['name' => 'Cheese Burger', 'price' => 10.99, 'description' => 'Classic burger with melted cheddar cheese', 'preparation_time' => 12],
-                ['name' => 'Bacon Burger', 'price' => 12.99, 'description' => 'Topped with crispy bacon and BBQ sauce', 'preparation_time' => 15],
+                ['name' => 'Cheese Burger', 'price' => 10.99, 'description' => 'Classic burger with melted cheddar cheese', 'preparation_time' => 12, 'image' => 'menu-items/cheese-burger.png'],
+                ['name' => 'Bacon Burger', 'price' => 12.99, 'description' => 'Topped with crispy bacon and BBQ sauce', 'preparation_time' => 15, 'image' => 'menu-items/bacon-burger.png'],
                 ['name' => 'Truffle Burger', 'price' => 16.99, 'discount_price' => 13.99, 'description' => 'Premium beef with truffle aioli and arugula', 'preparation_time' => 18, 'is_featured' => true, 'image' => 'menu-items/truffle-burger.png'],
             ],
             'Sides' => [
-                ['name' => 'French Fries', 'price' => 3.99, 'description' => 'Crispy golden fries', 'preparation_time' => 8],
-                ['name' => 'Onion Rings', 'price' => 4.99, 'description' => 'Beer-battered onion rings', 'preparation_time' => 10],
+                ['name' => 'French Fries', 'price' => 3.99, 'description' => 'Crispy golden fries', 'preparation_time' => 8, 'image' => 'menu-items/french-fries.png'],
+                ['name' => 'Onion Rings', 'price' => 4.99, 'description' => 'Beer-battered onion rings', 'preparation_time' => 10, 'image' => 'menu-items/onion-rings.png'],
             ],
             
             // Sushi Master
@@ -53,7 +53,7 @@ class MenuItemSeeder extends Seeder
             // Taco Fiesta
             'Tacos' => [
                 ['name' => 'Beef Tacos', 'price' => 8.99, 'description' => 'Seasoned beef with fresh toppings (3 tacos)', 'preparation_time' => 10, 'image' => 'menu-items/tacos.png'],
-                ['name' => 'Chicken Tacos', 'price' => 8.99, 'description' => 'Grilled chicken with pico de gallo (3 tacos)', 'preparation_time' => 10],
+                ['name' => 'Chicken Tacos', 'price' => 8.99, 'description' => 'Grilled chicken with pico de gallo (3 tacos)', 'preparation_time' => 10, 'image' => 'menu-items/chicken-tacos.png'],
                 ['name' => 'Fish Tacos', 'price' => 10.99, 'description' => 'Crispy fish with cabbage slaw (3 tacos)', 'preparation_time' => 12, 'is_featured' => true],
             ],
             'Burritos' => [
