@@ -69,5 +69,19 @@ Route::middleware('auth')->group(function () {
     // Admin routes
     Route::middleware(CheckRole::class . ':admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        
+        // User Management (Full CRUD)
+        Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['create', 'store']);
+        Route::post('/users/{user}/toggle-status', [App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+        
+        // Restaurant Viewing (Read-only)
+        Route::get('/restaurants', [App\Http\Controllers\Admin\RestaurantController::class, 'index'])->name('restaurants.index');
+        Route::get('/restaurants/{restaurant}', [App\Http\Controllers\Admin\RestaurantController::class, 'show'])->name('restaurants.show');
+        
+        // Category Viewing (Read-only)
+        Route::get('/categories', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('categories.index');
+        
+        // Menu Items Viewing (Read-only)
+        Route::get('/menu-items', [App\Http\Controllers\Admin\MenuItemController::class, 'index'])->name('menu-items.index');
     });
 });

@@ -13,14 +13,16 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@fooddelivery.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'phone' => '+1234567890',
-            'is_active' => true,
-            'email_verified_at' => now(),
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@fooddelivery.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'phone' => '+1234567890',
+                'is_active' => true,
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
