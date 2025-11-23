@@ -17,7 +17,25 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gray-50 font-sans antialiased">
+<body class="bg-gray-50 font-sans antialiased" x-data="{
+    notification: { show: false, type: '', message: '' },
+    cartCount: {{ auth()->check() && auth()->user()->isCustomer() ? app(\App\Services\CartService::class)->getCartCount() : 0 }}
+}" 
+@notify.window="notification = { show: true, type: $event.detail.type, message: $event.detail.message }; setTimeout(() => notification.show = false, 3000)"
+@cart-updated.window="cartCount = $event.detail">
+    
+    {{-- Notification Toast --}}
+    <div x-show="notification.show" 
+         x-transition
+         class="fixed top-4 right-4 z-50 max-w-sm">
+        <div :class="{
+            'bg-green-500': notification.type === 'success',
+            'bg-red-500': notification.type === 'error',
+            'bg-blue-500': notification.type === 'info'
+        }" class="text-white px-6 py-4 rounded-lg shadow-lg">
+            <p x-text="notification.message"></p>
+        </div>
+    </div>
     <div class="min-h-screen">
         <!-- Navigation -->
         <nav class="bg-white shadow-sm border-b border-gray-200">
