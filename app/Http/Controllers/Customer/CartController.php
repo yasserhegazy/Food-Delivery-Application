@@ -115,6 +115,6 @@ class CartController extends Controller
     {
         $this->cartService->clearCart();
 
-        return redirect()->route('cart.index')->with('success', 'Cart cleared!');
+        return redirect()->route('customer.cart.index')->with('success', 'Cart cleared!');
     }
 }
