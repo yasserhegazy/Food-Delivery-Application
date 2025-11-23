@@ -86,6 +86,12 @@
 
                     <!-- User Menu -->
                     <div class="flex items-center gap-4">
+                        @auth
+                            @if(auth()->user()->isCustomer())
+                                <x-cart-icon :count="app(\App\Services\CartService::class)->getCartCount()" />
+                            @endif
+                        @endauth
+                        
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900">
                                 <div class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-semibold">

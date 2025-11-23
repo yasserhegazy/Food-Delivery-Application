@@ -1,6 +1,6 @@
 @props(['item'])
 
-<div class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+<div x-data="{ showModal: false }" class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
     <!-- Image -->
     <div class="relative h-48 bg-gray-200 overflow-hidden">
         @if($item->image)
@@ -72,13 +72,24 @@
             </div>
             
             @if($item->is_available)
-                <button 
-                    type="button"
-                    class="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition-all transform hover:scale-110 shadow-lg shadow-orange-500/30">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                </button>
+                @auth
+                    @if(auth()->user()->isCustomer())
+                        <button @click="showModal = true"
+                            type="button"
+                            class="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition-all transform hover:scale-110 shadow-lg shadow-orange-500/30">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                        </button>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}" 
+                       class="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition-all transform hover:scale-110 shadow-lg shadow-orange-500/30 inline-block">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </a>
+                @endauth
             @endif
         </div>
         
@@ -91,4 +102,46 @@
             </div>
         @endif
     </div>
+
+    <!-- Add to Cart Modal -->
+    @auth
+        @if(auth()->user()->isCustomer() && $item->is_available)
+            <div x-show="showModal" 
+                 x-cloak
+                 @click.away="showModal = false"
+                 class="fixed inset-0 z-50 overflow-y-auto"
+                 style="display: none;">
+                <div class="flex items-center justify-center min-h-screen px-4">
+                    <div class="fixed inset-0 bg-black opacity-50"></div>
+                    
+                    <div class="relative bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+                        <button @click="showModal = false" 
+                                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                        
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ $item->name }}</h3>
+                        
+                        @if($item->image)
+                            <img src="{{ asset('storage/' . $item->image) }}" 
+                                 alt="{{ $item->name }}"
+                                 class="w-full h-48 object-cover rounded-lg mb-4">
+                        @endif
+                        
+                        <p class="text-gray-600 mb-4">{{ $item->description }}</p>
+                        
+                        <div class="mb-6">
+                            <span class="text-2xl font-bold text-orange-600">
+                                ${{ number_format($item->final_price, 2) }}
+                            </span>
+                        </div>
+                        
+                        <x-add-to-cart-button :menuItem="$item" />
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
 </div>

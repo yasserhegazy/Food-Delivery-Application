@@ -78,6 +78,23 @@
             </div>
         </div>
 
+        {{-- Rating Section --}}
+        @auth
+            @if(auth()->user()->isCustomer())
+                <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
+                    @php
+                        $userRating = $restaurant->ratings()->where('user_id', auth()->id())->first();
+                    @endphp
+                    
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                        {{ $userRating ? 'Your Rating' : 'Rate this Restaurant' }}
+                    </h2>
+                    
+                    <x-rating-form :restaurant="$restaurant" :userRating="$userRating" />
+                </div>
+            @endif
+        @endauth
+
         <!-- Menu -->
         <div class="pb-12">
             @if($restaurant->categories->count() > 0)
