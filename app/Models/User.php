@@ -75,6 +75,14 @@ class User extends Authenticatable
         return $this->hasOne(\App\Models\Restaurant::class);
     }
 
+    /**
+     * Get the user's addresses.
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
 
     /**
      * Check if user has a specific role.
