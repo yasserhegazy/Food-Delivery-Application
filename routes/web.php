@@ -44,14 +44,22 @@ Route::middleware('auth')->group(function () {
         // Cart routes
         Route::get('/cart', [App\Http\Controllers\Customer\CartController::class, 'index'])->name('cart.index');
         Route::post('/cart/add', [App\Http\Controllers\Customer\CartController::class, 'add'])->name('cart.add');
+        Route::delete('/cart/clear', [App\Http\Controllers\Customer\CartController::class, 'clear'])->name('cart.clear');
         Route::patch('/cart/{item}', [App\Http\Controllers\Customer\CartController::class, 'update'])->name('cart.update');
         Route::delete('/cart/{item}', [App\Http\Controllers\Customer\CartController::class, 'remove'])->name('cart.remove');
-        Route::delete('/cart', [App\Http\Controllers\Customer\CartController::class, 'clear'])->name('cart.clear');
         
         // Rating routes
         Route::post('/restaurants/{restaurant}/rate', [App\Http\Controllers\Customer\RatingController::class, 'store'])->name('restaurants.rate');
         Route::patch('/ratings/{rating}', [App\Http\Controllers\Customer\RatingController::class, 'update'])->name('ratings.update');
         Route::delete('/ratings/{rating}', [App\Http\Controllers\Customer\RatingController::class, 'destroy'])->name('ratings.destroy');
+
+        // Address routes
+        Route::resource('addresses', App\Http\Controllers\Customer\AddressController::class);
+
+        // Checkout routes
+        Route::get('/checkout', [App\Http\Controllers\Customer\CheckoutController::class, 'index'])->name('checkout.index');
+        Route::post('/checkout', [App\Http\Controllers\Customer\CheckoutController::class, 'store'])->name('checkout.store');
+        Route::get('/checkout/success/{order}', [App\Http\Controllers\Customer\CheckoutController::class, 'success'])->name('checkout.success');
     });
     
     // Restaurant owner routes
