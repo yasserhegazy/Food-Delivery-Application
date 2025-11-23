@@ -185,15 +185,17 @@
                     </div>
 
                     <div class="mt-6 space-y-3">
-                        <x-button variant="primary" class="w-full">
-                            Proceed to Checkout
-                        </x-button>
+                        <a href="{{ route('customer.checkout.index') }}" class="block">
+                            <x-button variant="primary" class="w-full">
+                                Proceed to Checkout
+                            </x-button>
+                        </a>
                         
-                        <form action="{{ route('customer.cart.clear') }}" method="POST">
+                        <form action="{{ route('customer.cart.clear') }}" method="POST" onsubmit="return confirm('Are you sure you want to clear your cart?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
-                                    onclick="return confirm('Are you sure you want to clear your cart?')"
+                                    {{-- onclick="return confirm('Are you sure you want to clear your cart?')" --}}
                                     class="w-full text-red-600 hover:text-red-700 font-medium text-sm">
                                 Clear Cart
                             </button>
