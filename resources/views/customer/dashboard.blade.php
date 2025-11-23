@@ -53,14 +53,54 @@
         </x-card>
     </div>
 
-    <x-card title="Featured Restaurants">
-        <div class="text-center py-12">
-            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-            </svg>
-            <p class="text-gray-500">No restaurants available yet</p>
-            <p class="text-sm text-gray-400 mt-1">Check back soon for delicious options!</p>
+    {{-- Featured Restaurants --}}
+    <div class="mb-8">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Featured Restaurants</h2>
+                <p class="text-gray-600 mt-1">Top-rated restaurants near you</p>
+            </div>
+            <a href="{{ route('restaurants.index') }}" class="text-orange-600 hover:text-orange-700 font-medium flex items-center gap-2">
+                View All
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
         </div>
-    </x-card>
+
+        @if($featuredRestaurants->count() > 0)
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($featuredRestaurants as $restaurant)
+                    <x-restaurant-card :restaurant="$restaurant" />
+                @endforeach
+            </div>
+        @else
+            <x-card>
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    <p class="text-gray-500">No featured restaurants available yet</p>
+                    <p class="text-sm text-gray-400 mt-1">Check back soon for delicious options!</p>
+                </div>
+            </x-card>
+        @endif
+    </div>
+
+    {{-- Recently Added --}}
+    @if($recentRestaurants->count() > 0)
+    <div>
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Recently Added</h2>
+            <p class="text-gray-600 mt-1">New restaurants on our platform</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach($recentRestaurants as $restaurant)
+                <x-restaurant-card :restaurant="$restaurant" />
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 @endsection

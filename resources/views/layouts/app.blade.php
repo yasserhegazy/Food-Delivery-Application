@@ -35,7 +35,10 @@
                         <!-- Navigation Links -->
                         <div class="hidden md:flex md:ml-10 md:space-x-8">
                             @if(auth()->user()->isCustomer())
-                                <a href="{{ route('customer.dashboard') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 {{ request()->routeIs('customer.*') ? 'border-orange-500' : 'border-transparent hover:border-gray-300' }}">
+                                <a href="{{ route('customer.dashboard') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('customer.dashboard') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
+                                    Home
+                                </a>
+                                <a href="{{ route('restaurants.index') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('restaurants.*') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
                                     Browse Restaurants
                                 </a>
                                 <a href="#" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-gray-300">
