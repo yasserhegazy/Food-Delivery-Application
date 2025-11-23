@@ -54,6 +54,11 @@ class Restaurant extends Model
         return $this->hasManyThrough(MenuItem::class, Category::class);
     }
 
+    public function ratings()
+    {
+        return $this->hasMany(RestaurantRating::class);
+    }
+
     // Scopes
     public function scopeActive($query)
     {

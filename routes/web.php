@@ -40,6 +40,18 @@ Route::middleware('auth')->group(function () {
     // Customer routes
     Route::middleware(CheckRole::class . ':customer')->prefix('customer')->name('customer.')->group(function () {
         Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
+        
+        // Cart routes
+        Route::get('/cart', [App\Http\Controllers\Customer\CartController::class, 'index'])->name('cart.index');
+        Route::post('/cart/add', [App\Http\Controllers\Customer\CartController::class, 'add'])->name('cart.add');
+        Route::patch('/cart/{item}', [App\Http\Controllers\Customer\CartController::class, 'update'])->name('cart.update');
+        Route::delete('/cart/{item}', [App\Http\Controllers\Customer\CartController::class, 'remove'])->name('cart.remove');
+        Route::delete('/cart', [App\Http\Controllers\Customer\CartController::class, 'clear'])->name('cart.clear');
+        
+        // Rating routes
+        Route::post('/restaurants/{restaurant}/rate', [App\Http\Controllers\Customer\RatingController::class, 'store'])->name('restaurants.rate');
+        Route::patch('/ratings/{rating}', [App\Http\Controllers\Customer\RatingController::class, 'update'])->name('ratings.update');
+        Route::delete('/ratings/{rating}', [App\Http\Controllers\Customer\RatingController::class, 'destroy'])->name('ratings.destroy');
     });
     
     // Restaurant owner routes
