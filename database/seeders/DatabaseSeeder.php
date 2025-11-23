@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolePermissionSeeder::class,
             AdminUserSeeder::class,
+            CustomerUserSeeder::class,
         ]);
 
         // Seed restaurant data
