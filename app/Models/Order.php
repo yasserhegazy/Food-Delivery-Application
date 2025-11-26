@@ -10,6 +10,7 @@ class Order extends Model
         'user_id',
         'restaurant_id',
         'delivery_address_id',
+        'driver_id',
         'total_amount',
         'status',
         'special_instructions',
@@ -33,5 +34,10 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(User::class, 'driver_id');
     }
 }
