@@ -72,6 +72,9 @@
                                 <a href="{{ route('restaurant.categories.index') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('restaurant.categories.*') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
                                     Categories
                                 </a>
+                                <a href="{{ route('restaurant.orders.index') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('restaurant.orders.*') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
+                                    Orders
+                                </a>
                                 <a href="{{ route('restaurant.profile.edit') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('restaurant.profile.*') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
                                     Profile
                                 </a>
