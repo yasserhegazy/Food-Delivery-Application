@@ -94,6 +94,11 @@ Route::middleware('auth')->group(function () {
     // Driver routes
     Route::middleware(CheckRole::class . ':driver')->prefix('driver')->name('driver.')->group(function () {
         Route::get('/dashboard', [DriverDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/deliveries/available', [DriverDashboardController::class, 'availableDeliveries'])->name('deliveries.available');
+        Route::get('/deliveries/my-deliveries', [DriverDashboardController::class, 'myDeliveries'])->name('deliveries.my');
+        Route::post('/deliveries/{order}/accept', [DriverDashboardController::class, 'acceptDelivery'])->name('deliveries.accept');
+        Route::patch('/deliveries/{order}/status', [DriverDashboardController::class, 'updateDeliveryStatus'])->name('deliveries.status');
+        Route::get('/deliveries/{order}', [DriverDashboardController::class, 'show'])->name('deliveries.show');
     });
     
     // Admin routes
