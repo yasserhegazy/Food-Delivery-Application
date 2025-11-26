@@ -79,10 +79,10 @@
                                     Profile
                                 </a>
                             @elseif(auth()->user()->isDriver())
-                                <a href="{{ route('driver.dashboard') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 {{ request()->routeIs('driver.dashboard') ? 'border-orange-500' : 'border-transparent hover:border-gray-300' }}">
+                                <a href="{{ route('driver.deliveries.available') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('driver.deliveries.available') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
                                     Available Deliveries
                                 </a>
-                                <a href="#" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-gray-300">
+                                <a href="{{ route('driver.deliveries.my') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('driver.deliveries.my') || request()->routeIs('driver.deliveries.show') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
                                     My Deliveries
                                 </a>
                             @elseif(auth()->user()->isAdmin())
