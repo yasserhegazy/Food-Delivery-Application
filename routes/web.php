@@ -60,6 +60,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/checkout', [App\Http\Controllers\Customer\CheckoutController::class, 'index'])->name('checkout.index');
         Route::post('/checkout', [App\Http\Controllers\Customer\CheckoutController::class, 'store'])->name('checkout.store');
         Route::get('/checkout/success/{order}', [App\Http\Controllers\Customer\CheckoutController::class, 'success'])->name('checkout.success');
+
+        // Order routes
+        Route::get('/orders', [App\Http\Controllers\Customer\OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [App\Http\Controllers\Customer\OrderController::class, 'show'])->name('orders.show');
     });
     
     // Restaurant owner routes

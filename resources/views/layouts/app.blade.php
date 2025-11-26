@@ -59,7 +59,7 @@
                                 <a href="{{ route('restaurants.index') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('restaurants.*') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
                                     Browse Restaurants
                                 </a>
-                                <a href="#" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-gray-300">
+                                <a href="{{ route('customer.orders.index') }}" class="inline-flex items-center px-1 pt-1 text-sm font-medium {{ request()->routeIs('customer.orders.*') ? 'text-gray-900 border-b-2 border-orange-500' : 'text-gray-500 border-b-2 border-transparent hover:border-gray-300' }}">
                                     My Orders
                                 </a>
                             @elseif(auth()->user()->isRestaurantOwner())
