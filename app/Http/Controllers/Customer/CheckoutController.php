@@ -20,7 +20,7 @@ class CheckoutController extends Controller
     public function index()
     {
         $cartItems = $this->cartService->getCart();
-        if (count($cartItems) === 0) {
+        if ($cartItems->isEmpty()) {
             return redirect()->route('customer.cart.index')->with('error', 'Your cart is empty.');
         }
 
@@ -38,17 +38,16 @@ class CheckoutController extends Controller
         ]);
 
         $cartItems = $this->cartService->getCart();
-        if (count($cartItems) === 0) {
+        if ($cartItems->isEmpty()) {
             return redirect()->route('customer.cart.index')->with('error', 'Your cart is empty.');
         }
 
-        // Verify address belongs to user
         $address = \App\Models\Address::where('id', $request->address_id)->where('user_id', auth()->id())->firstOrFail();
 
-        // Get restaurant from first item (assuming single restaurant cart)
-        $firstItem = reset($cartItems);
-        // Assuming the cart item structure has 'model' which is the MenuItem
-        $restaurantId = $firstItem['model']->category->restaurant_id;
+        // Get restaurant from first item (cart is grouped by restaurant)
+        $firstRestaurantItems = $cartItems->first();
+        $firstItem = $firstRestaurantItems->first();
+        $restaurantId = $firstItem->menuItem->category->restaurant_id;
 
         try {
             DB::beginTransaction();
@@ -62,13 +61,14 @@ class CheckoutController extends Controller
                 'special_instructions' => $request->special_instructions,
             ]);
 
-            foreach ($cartItems as $id => $item) {
+            // Create order items from all cart items (flatten the grouped collection)
+            foreach ($cartItems->flatten() as $cartItem) {
                 \App\Models\OrderItem::create([
                     'order_id' => $order->id,
-                    'menu_item_id' => $item['model']->id,
-                    'name' => $item['model']->name,
-                    'price' => $item['model']->price, // Should ideally handle discount price logic here if CartService uses it
-                    'quantity' => $item['quantity'],
+                    'menu_item_id' => $cartItem->menuItem->id,
+                    'name' => $cartItem->menuItem->name,
+                    'price' => $cartItem->price,
+                    'quantity' => $cartItem->quantity,
                 ]);
             }
 
