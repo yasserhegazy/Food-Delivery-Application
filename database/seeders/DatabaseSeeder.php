@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             AdminUserSeeder::class,
             CustomerUserSeeder::class,
+            DriverSeeder::class,
         ]);
 
         // Seed restaurant data
