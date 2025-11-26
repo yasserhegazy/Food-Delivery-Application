@@ -77,8 +77,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/categories/reorder', [App\Http\Controllers\Restaurant\CategoryController::class, 'reorder'])->name('categories.reorder');
         
         // Menu Items
+        // Menu Items
         Route::resource('menu', App\Http\Controllers\Restaurant\MenuItemController::class);
         Route::post('/menu/{menuItem}/toggle', [App\Http\Controllers\Restaurant\MenuItemController::class, 'toggleAvailability'])->name('menu.toggle');
+
+        // Orders
+        Route::get('/orders', [App\Http\Controllers\Restaurant\RestaurantOrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [App\Http\Controllers\Restaurant\RestaurantOrderController::class, 'show'])->name('orders.show');
+        Route::patch('/orders/{order}/status', [App\Http\Controllers\Restaurant\RestaurantOrderController::class, 'updateStatus'])->name('orders.status');
     });
     
     // Driver routes
