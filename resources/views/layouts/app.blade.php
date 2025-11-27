@@ -108,6 +108,9 @@
                     <!-- User Menu -->
                     <div class="flex items-center gap-4">
                         @auth
+                            {{-- Notification Bell --}}
+                            <x-notification-bell :count="auth()->user()->unreadNotifications()->count()" />
+                            
                             @if(auth()->user()->isCustomer())
                                 <x-cart-icon :count="app(\App\Services\CartService::class)->getCartCount()" />
                             @endif
