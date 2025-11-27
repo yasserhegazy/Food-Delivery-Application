@@ -35,14 +35,15 @@ auth.json
 !/storage/app/public
 /storage/app/public/*
 
-# Allow only image files inside storage/app/public
+# Allow only image files inside storage/app/public (including subdirectories)
 # (remove file types you don’t want)
-!/storage/app/public/*.jpg
-!/storage/app/public/*.jpeg
-!/storage/app/public/*.png
-!/storage/app/public/*.gif
-!/storage/app/public/*.webp
-!/storage/app/public/*.svg
+!/storage/app/public/**/*.jpg
+!/storage/app/public/**/*.jpeg
+!/storage/app/public/**/*.png
+!/storage/app/public/**/*.gif
+!/storage/app/public/**/*.webp
+!/storage/app/public/**/*.svg
+!/storage/app/public/menu-items/
 
 # Disallow sensitive keys & cache
 /storage/*.key
