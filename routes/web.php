@@ -37,6 +37,12 @@ Route::middleware('auth')->group(function () {
     // Main dashboard route (redirects to role-specific dashboard)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Notification routes (all authenticated users)
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+    Route::get('/notifications/unread-count', [App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
+    
     // Customer routes
     Route::middleware(CheckRole::class . ':customer')->prefix('customer')->name('customer.')->group(function () {
         Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
