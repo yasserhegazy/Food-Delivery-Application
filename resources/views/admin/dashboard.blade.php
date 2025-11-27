@@ -1,195 +1,255 @@
 @extends('layouts.app')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Admin Dashboard Analytics')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-        <p class="text-gray-600 mt-1">Platform overview and management</p>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {{-- Header with Date Filter --}}
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Dashboard Analytics</h1>
+            <p class="text-gray-600 mt-1">Platform performance and insights</p>
+        </div>
+        
+        <div>
+            <form method="GET" action="{{ route('admin.dashboard') }}" class="flex gap-2">
+                <select name="period" onchange="this.form.submit()" class="rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                    <option value="7" {{ $period == '7' ? 'selected' : '' }}>Last 7 Days</option>
+                    <option value="30" {{ $period == '30' ? 'selected' : '' }}>Last 30 Days</option>
+                    <option value="90" {{ $period == '90' ? 'selected' : '' }}>Last 90 Days</option>
+                    <option value="year" {{ $period == 'year' ? 'selected' : '' }}>This Year</option>
+                </select>
+            </form>
+        </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    {{-- Key Metrics Cards --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {{-- Total Revenue --}}
         <x-card>
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                </div>
+            <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-2xl font-bold text-gray-800">{{ $stats['total_users'] }}</p>
-                    <p class="text-sm text-gray-600">Total Users</p>
+                    <p class="text-sm font-medium text-gray-600">Total Revenue</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($stats['total_revenue'], 2) }}</p>
+                    <p class="text-sm mt-1 {{ $stats['revenue_change'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                        {{ $stats['revenue_change'] >= 0 ? '+' : '' }}{{ $stats['revenue_change'] }}% from previous period
+                    </p>
                 </div>
-            </div>
-        </x-card>
-
-        <x-card>
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-2xl font-bold text-gray-800">{{ $stats['total_restaurants'] }}</p>
-                    <p class="text-sm text-gray-600">Restaurants</p>
-                </div>
-            </div>
-        </x-card>
-
-        <x-card>
-            <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-2xl font-bold text-gray-800">{{ $stats['total_orders'] }}</p>
-                    <p class="text-sm text-gray-600">Total Orders</p>
-                </div>
-            </div>
-        </x-card>
-
-        <x-card>
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
+            </div>
+        </x-card>
+
+        {{-- Total Orders --}}
+        <x-card>
+            <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-2xl font-bold text-gray-800">${{ number_format($stats['total_revenue'], 2) }}</p>
-                    <p class="text-sm text-gray-600">Total Revenue</p>
+                    <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($stats['total_orders']) }}</p>
+                    <p class="text-sm mt-1 {{ $stats['orders_change'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                        {{ $stats['orders_change'] >= 0 ? '+' : '' }}{{ $stats['orders_change'] }}% from previous period
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                </div>
+            </div>
+        </x-card>
+
+        {{-- Total Users --}}
+        <x-card>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Users</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($stats['total_users']) }}</p>
+                    <p class="text-sm mt-1 text-gray-500">All platform users</p>
+                </div>
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </x-card>
+
+        {{-- Avg Order Value --}}
+        <x-card>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Avg Order Value</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($stats['avg_order_value'], 2) }}</p>
+                    <p class="text-sm mt-1 text-gray-500">Per order average</p>
+                </div>
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
                 </div>
             </div>
         </x-card>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <x-card title="User Distribution">
-            <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-800">Customers</p>
-                            <p class="text-sm text-gray-500">{{ $stats['customers'] }} users</p>
-                        </div>
-                    </div>
-                    <span class="text-2xl font-bold text-gray-800">{{ $stats['customers'] }}</span>
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-800">Restaurant Owners</p>
-                            <p class="text-sm text-gray-500">{{ $stats['restaurant_owners'] }} users</p>
-                        </div>
-                    </div>
-                    <span class="text-2xl font-bold text-gray-800">{{ $stats['restaurant_owners'] }}</span>
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-800">Drivers</p>
-                            <p class="text-sm text-gray-500">{{ $stats['drivers'] }} users</p>
-                        </div>
-                    </div>
-                    <span class="text-2xl font-bold text-gray-800">{{ $stats['drivers'] }}</span>
-                </div>
-            </div>
+    {{-- Charts Section --}}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {{-- Revenue Chart --}}
+        <x-card title="Revenue Trend">
+            <canvas id="revenueChart" height="300"></canvas>
         </x-card>
 
-        <x-card title="Quick Actions">
-            <div class="space-y-3">
-                <a href="{{ route('admin.users.index') }}">
-                    <x-button variant="primary" class="w-full">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                        Manage Users
-                    </x-button>
-                </a>
-                <a href="{{ route('admin.restaurants.index') }}">
-                    <x-button variant="outline" class="w-full">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
-                        View Restaurants
-                    </x-button>
-                </a>
-                <a href="{{ route('admin.categories.index') }}">
-                    <x-button variant="outline" class="w-full">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                        View Categories
-                    </x-button>
-                </a>
-                <a href="{{ route('admin.menu-items.index') }}">
-                    <x-button variant="outline" class="w-full">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        View Menu Items
-                    </x-button>
-                </a>
-            </div>
+        {{-- Order Status Chart --}}
+        <x-card title="Order Status Breakdown">
+            <canvas id="orderStatusChart" height="300"></canvas>
         </x-card>
     </div>
 
-    @if($recentRestaurants->count() > 0 || $recentUsers->count() > 0)
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        @if($recentRestaurants->count() > 0)
-        <x-card title="Recent Restaurants">
-            <div class="space-y-3">
-                @foreach($recentRestaurants as $restaurant)
-                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                        <p class="font-semibold text-gray-800">{{ $restaurant->name }}</p>
-                        <p class="text-sm text-gray-500">{{ $restaurant->city }} • {{ $restaurant->user->name }}</p>
-                    </div>
-                    <x-status-badge :status="$restaurant->is_active" />
-                </div>
-                @endforeach
-            </div>
-        </x-card>
-        @endif
+    {{-- Popular Restaurants Table --}}
+    @if($popularRestaurants->count() > 0)
+    <x-card title="Popular Restaurants" class="mb-8">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Restaurant</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Orders</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Revenue</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg Order</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($popularRestaurants as $restaurant)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">{{ $restaurant->name }}</div>
+                            <div class="text-sm text-gray-500">{{ $restaurant->city }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $restaurant->orders_count }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
+                            ${{ number_format($restaurant->total_revenue, 2) }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ${{ $restaurant->orders_count > 0 ? number_format($restaurant->total_revenue / $restaurant->orders_count, 2) : '0.00' }}
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </x-card>
+    @endif
 
-        @if($recentUsers->count() > 0)
-        <x-card title="Recent Users">
-            <div class="space-y-3">
-                @foreach($recentUsers as $user)
-                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                        <p class="font-semibold text-gray-800">{{ $user->name }}</p>
-                        <p class="text-sm text-gray-500">{{ $user->email }}</p>
-                    </div>
-                    <x-role-badge :role="$user->role" />
-                </div>
-                @endforeach
-            </div>
-        </x-card>
-        @endif
-    </div>
+    {{-- Popular Menu Items Table --}}
+    @if($popularMenuItems->count() > 0)
+    <x-card title="Popular Menu Items">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Restaurant</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Sold</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($popularMenuItems as $item)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">{{ $item->name }}</div>
+                            <div class="text-sm text-gray-500">${{ number_format($item->price, 2) }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $item->category->restaurant->name }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
+                            {{ $item->total_sold }} units
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
+                            ${{ number_format($item->total_revenue, 2) }}
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </x-card>
     @endif
 </div>
+
+{{-- Chart.js --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Revenue Chart
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+            labels: @json($revenueByPeriod->pluck('date')),
+            datasets: [{
+                label: 'Revenue ($)',
+                data: @json($revenueByPeriod->pluck('revenue')),
+                borderColor: 'rgb(249, 115, 22)',
+                backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Order Status Chart
+    const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+    const orderStats = @json($orderStatistics);
+    new Chart(orderStatusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(orderStats).map(status => status.replace('_', ' ').toUpperCase()),
+            datasets: [{
+                data: Object.values(orderStats),
+                backgroundColor: [
+                    'rgb(59, 130, 246)',   // blue
+                    'rgb(16, 185, 129)',   // green
+                    'rgb(249, 115, 22)',   // orange
+                    'rgb(139, 92, 246)',   // purple
+                    'rgb(236, 72, 153)',   // pink
+                    'rgb(34, 197, 94)',    // lime
+                    'rgb(239, 68, 68)'     // red
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+</script>
 @endsection
