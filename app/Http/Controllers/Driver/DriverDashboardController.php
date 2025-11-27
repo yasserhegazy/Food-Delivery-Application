@@ -67,6 +67,9 @@ class DriverDashboardController extends Controller
             'status' => 'on_way',
         ]);
 
+        // Notify customer that order is on the way
+        $order->user->notify(new \App\Notifications\OrderStatusChanged($order, 'on_way'));
+
         return redirect()->route('driver.deliveries.my')->with('success', 'Delivery accepted! You can now proceed to deliver.');
     }
 

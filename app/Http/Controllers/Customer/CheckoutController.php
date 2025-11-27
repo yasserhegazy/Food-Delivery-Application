@@ -74,6 +74,9 @@ class CheckoutController extends Controller
 
             $this->cartService->clearCart();
 
+            // Notify restaurant owner about new order
+            $order->restaurant->user->notify(new \App\Notifications\OrderPlaced($order));
+
             DB::commit();
 
             return redirect()->route('customer.checkout.success', $order)->with('success', 'Order placed successfully!');

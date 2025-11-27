@@ -63,6 +63,15 @@ class RestaurantOrderController extends Controller
         
         $order->update(['status' => $request->status]);
 
+        // Notify customer about status change
+        $order->user->notify(new \App\Notifications\OrderStatusChanged($order, $request->status));
+
+        // If order is ready for pickup, notify all drivers
+        if ($request->status === 'ready_for_pickup') {
+            $drivers = \App\Models\User::where('role', 'driver')->where('is_active', true)->get();
+            \Illuminate\Support\Facades\Notification::send($drivers, new \App\Notifications\NewDeliveryAvailable($order));
+        }
+
         return back()->with('success', 'Order status updated successfully.');
     }
 }
