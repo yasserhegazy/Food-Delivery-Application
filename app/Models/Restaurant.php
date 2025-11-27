@@ -59,6 +59,11 @@ class Restaurant extends Model
         return $this->hasMany(RestaurantRating::class);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
     // Scopes
     public function scopeActive($query)
     {
