@@ -13,6 +13,7 @@ class Restaurant extends Model
         'name',
         'slug',
         'description',
+        'cuisine_type',
         'logo',
         'cover_image',
         'phone',
@@ -82,6 +83,66 @@ class Restaurant extends Model
         return $query->where('rating', '>=', 4.0)->orderBy('rating', 'desc');
     }
 
+    public function scopeByCuisine($query, $cuisine)
+    {
+        return $query->where('cuisine_type', $cuisine);
+    }
+
+    public function scopeByPriceRange($query, $range)
+    {
+        // Price ranges: $ (0-15), $$ (15-30), $$$ (30-50), $$$$ (50+)
+        $ranges = [
+            '$' => [0, 15],
+            '$$' => [15, 30],
+            '$$$' => [30, 50],
+            '$$$$' => [50, 999999],
+        ];
+
+        if (isset($ranges[$range])) {
+            [$min, $max] = $ranges[$range];
+            return $query->whereHas('menuItems', function ($q) use ($min, $max) {
+                $q->whereBetween('price', [$min, $max]);
+            });
+        }
+
+        return $query;
+    }
+
+    public function scopeByDeliveryFee($query, $maxFee)
+    {
+        if ($maxFee === 'free') {
+            return $query->where('delivery_fee', 0);
+        }
+        
+        return $query->where('delivery_fee', '<=', $maxFee);
+    }
+
+    public function scopeByDeliveryTime($query, $maxTime)
+    {
+        return $query->where('delivery_time', '<=', $maxTime);
+    }
+
+    public function scopeSearch($query, $searchTerm)
+    {
+        return $query->where(function ($q) use ($searchTerm) {
+            $q->where('name', 'like', '%' . $searchTerm . '%')
+              ->orWhere('description', 'like', '%' . $searchTerm . '%')
+              ->orWhere('cuisine_type', 'like', '%' . $searchTerm . '%');
+        });
+    }
+
+    public function scopeOpenNow($query)
+    {
+        $now = now()->format('H:i:s');
+        return $query->where(function ($q) use ($now) {
+            $q->whereNull('opening_time')
+              ->orWhere(function ($q2) use ($now) {
+                  $q2->where('opening_time', '<=', $now)
+                     ->where('closing_time', '>=', $now);
+              });
+        });
+    }
+
     // Accessors
     public function getIsOpenAttribute()
     {
@@ -91,6 +152,32 @@ class Restaurant extends Model
 
         $now = now()->format('H:i:s');
         return $now >= $this->opening_time && $now <= $this->closing_time;
+    }
+
+    public function getAveragePriceAttribute()
+    {
+        return $this->menuItems()->avg('price') ?? 0;
+    }
+
+    public function getPriceRangeAttribute()
+    {
+        $avgPrice = $this->average_price;
+        
+        if ($avgPrice < 15) return '$';
+        if ($avgPrice < 30) return '$$';
+        if ($avgPrice < 50) return '$$$';
+        return '$$$$';
+    }
+
+    // Static Methods
+    public static function getAvailableCuisines()
+    {
+        return self::whereNotNull('cuisine_type')
+            ->distinct()
+            ->orderBy('cuisine_type')
+            ->pluck('cuisine_type')
+            ->filter()
+            ->values();
     }
 
     // Methods
