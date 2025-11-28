@@ -49,6 +49,7 @@ class RestaurantFactory extends Factory
             'name' => $name,
             'slug' => Str::slug($name) . '-' . fake()->unique()->numberBetween(1, 100000),
             'description' => fake()->sentence(12),
+            'cuisine_type' => fake()->randomElement($cuisines),
             'logo' => null,
             'cover_image' => null,
             'phone' => fake()->phoneNumber(),

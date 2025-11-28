@@ -18,6 +18,7 @@ class RestaurantSeeder extends Seeder
             [
                 'name' => 'Pizza Paradise',
                 'description' => 'Authentic Italian pizzas made with fresh ingredients and traditional recipes. Family-owned since 1995.',
+                'cuisine_type' => 'Italian',
                 'phone' => '+1 (555) 123-4567',
                 'email' => 'info@pizzaparadise.com',
                 'address' => '123 Main Street',
@@ -33,6 +34,7 @@ class RestaurantSeeder extends Seeder
             [
                 'name' => 'Burger House',
                 'description' => 'Juicy gourmet burgers with premium ingredients. Try our signature truffle burger!',
+                'cuisine_type' => 'American',
                 'phone' => '+1 (555) 234-5678',
                 'email' => 'hello@burgerhouse.com',
                 'address' => '456 Oak Avenue',
@@ -48,6 +50,7 @@ class RestaurantSeeder extends Seeder
             [
                 'name' => 'Sushi Master',
                 'description' => 'Fresh sushi and Japanese cuisine prepared by experienced chefs. Daily fresh fish delivery.',
+                'cuisine_type' => 'Japanese',
                 'phone' => '+1 (555) 345-6789',
                 'email' => 'contact@sushimaster.com',
                 'address' => '789 Park Lane',
@@ -63,6 +66,7 @@ class RestaurantSeeder extends Seeder
             [
                 'name' => 'Taco Fiesta',
                 'description' => 'Authentic Mexican street food with bold flavors. Everything made fresh daily!',
+                'cuisine_type' => 'Mexican',
                 'phone' => '+1 (555) 456-7890',
                 'email' => 'info@tacofiesta.com',
                 'address' => '321 Sunset Boulevard',
@@ -78,6 +82,7 @@ class RestaurantSeeder extends Seeder
             [
                 'name' => 'Pasta Bella',
                 'description' => 'Homemade pasta and classic Italian dishes. Nonna\'s recipes passed down through generations.',
+                'cuisine_type' => 'Italian',
                 'phone' => '+1 (555) 567-8901',
                 'email' => 'hello@pastabella.com',
                 'address' => '654 Broadway',
