@@ -19,6 +19,7 @@ Route::get('/restaurants', [App\Http\Controllers\PublicRestaurantController::cla
 Route::get('/restaurants/search', [App\Http\Controllers\PublicRestaurantController::class, 'search'])->name('restaurants.search');
 Route::get('/restaurants/suggestions', [App\Http\Controllers\PublicRestaurantController::class, 'suggestions'])->name('restaurants.suggestions');
 Route::get('/restaurants/filters', [App\Http\Controllers\PublicRestaurantController::class, 'filters'])->name('restaurants.filters');
+Route::get('/restaurants/{restaurant}/categories/{category}', [App\Http\Controllers\PublicRestaurantController::class, 'categoryItems'])->name('restaurants.category-items');
 Route::get('/restaurants/{slug}', [App\Http\Controllers\PublicRestaurantController::class, 'show'])->name('restaurants.show');
 
 

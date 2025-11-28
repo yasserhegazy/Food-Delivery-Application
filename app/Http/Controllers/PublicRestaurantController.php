@@ -105,11 +105,37 @@ class PublicRestaurantController extends Controller
     public function show($slug)
     {
         $restaurant = Restaurant::where('slug', $slug)
-            ->with(['categories.menuItems' => function ($query) {
-                $query->available()->ordered();
+            ->with(['categories' => function ($query) {
+                $query->orderBy('sort_order');
             }])
             ->firstOrFail();
 
         return view('restaurants.show', compact('restaurant'));
+    }
+
+    /**
+     * Get menu items for a specific category
+     */
+    public function categoryItems(Restaurant $restaurant, $categoryId)
+    {
+        $category = $restaurant->categories()->findOrFail($categoryId);
+        
+        $items = $category->menuItems()
+            ->available()
+            ->ordered()
+            ->paginate(12);
+
+        $html = '';
+        foreach ($items as $item) {
+            $html .= view('components.menu-item-card', ['item' => $item])->render();
+        }
+
+        return response()->json([
+            'success' => true,
+            'html' => $html,
+            'hasMore' => $items->hasMorePages(),
+            'nextPageUrl' => $items->nextPageUrl(),
+            'total' => $items->total()
+        ]);
     }
 }

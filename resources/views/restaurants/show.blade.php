@@ -95,35 +95,74 @@
             @endif
         @endauth
 
-        <!-- Menu -->
-        <div class="pb-12">
+        <!-- Menu Section with AJAX Tabs -->
+        <div class="pb-12" x-data="menuManager({{ $restaurant->categories->first()->id ?? 'null' }}, {{ $restaurant->categories->first() && $restaurant->categories->first()->menuItems()->available()->count() > 12 ? 'true' : 'false' }})">
             @if($restaurant->categories->count() > 0)
                 <!-- Category Tabs -->
                 <div class="bg-white rounded-xl shadow-sm p-4 mb-6 sticky top-4 z-20">
-                    <div class="flex items-center gap-4 overflow-x-auto">
+                    <div class="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
                         @foreach($restaurant->categories as $category)
-                            <a href="#category-{{ $category->id }}" 
-                               class="px-4 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-orange-50 hover:text-orange-600 transition">
+                            <button 
+                                @click="switchCategory({{ $category->id }})"
+                                :class="activeCategory === {{ $category->id }} ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                                class="px-6 py-2.5 rounded-full font-medium whitespace-nowrap transition-all duration-200">
                                 {{ $category->name }}
-                            </a>
+                            </button>
                         @endforeach
                     </div>
                 </div>
 
-                <!-- Menu Items by Category -->
-                @foreach($restaurant->categories as $category)
-                    @if($category->menuItems->count() > 0)
-                        <div id="category-{{ $category->id }}" class="mb-12">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ $category->name }}</h2>
+                <!-- Menu Items Container -->
+                <div class="min-h-[400px]">
+                    @foreach($restaurant->categories as $index => $category)
+                        <div x-show="activeCategory === {{ $category->id }}" 
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0 translate-y-4"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             style="display: none;">
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                @foreach($category->menuItems as $item)
-                                    <x-menu-item-card :item="$item" />
-                                @endforeach
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-2xl font-bold text-gray-900">{{ $category->name }}</h2>
+                                <span class="text-sm text-gray-500">{{ $category->description }}</span>
+                            </div>
+
+                            {{-- Container for items --}}
+                            <div id="category-content-{{ $category->id }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                                {{-- First category loaded by default server-side (limited to 12) --}}
+                                @if($index === 0)
+                                    @foreach($category->menuItems()->available()->ordered()->take(12)->get() as $item)
+                                        <x-menu-item-card :item="$item" />
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            {{-- Load More Button --}}
+                            <div x-show="categoryStates[{{ $category->id }}]?.hasMore" class="flex justify-center pb-8">
+                                <button 
+                                    @click="loadMore({{ $category->id }})"
+                                    :disabled="categoryStates[{{ $category->id }}]?.isLoadingMore"
+                                    class="px-6 py-3 bg-white border border-gray-300 rounded-full text-gray-700 font-medium hover:bg-gray-50 hover:text-orange-600 transition flex items-center gap-2 shadow-sm">
+                                    <span x-show="!categoryStates[{{ $category->id }}]?.isLoadingMore">Load More Items</span>
+                                    <span x-show="categoryStates[{{ $category->id }}]?.isLoadingMore" class="flex items-center">
+                                        <svg class="animate-spin h-5 w-5 mr-2 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Loading...
+                                    </span>
+                                </button>
+                            </div>
+
+                            {{-- Initial Loading State --}}
+                            <div x-show="isLoading && !categoryStates[{{ $category->id }}]?.loaded" class="flex justify-center py-12">
+                                <svg class="animate-spin h-10 w-10 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
                             </div>
                         </div>
-                    @endif
-                @endforeach
+                    @endforeach
+                </div>
             @else
                 <x-empty-state 
                     title="No menu available"
@@ -133,4 +172,97 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+function menuManager(initialCategoryId, initialHasMore) {
+    return {
+        activeCategory: initialCategoryId,
+        isLoading: false,
+        categoryStates: {
+            [initialCategoryId]: {
+                loaded: true,
+                page: 1,
+                hasMore: initialHasMore,
+                isLoadingMore: false
+            }
+        },
+
+        async switchCategory(categoryId) {
+            this.activeCategory = categoryId;
+
+            // Initialize state if not exists
+            if (!this.categoryStates[categoryId]) {
+                this.categoryStates[categoryId] = {
+                    loaded: false,
+                    page: 0,
+                    hasMore: false,
+                    isLoadingMore: false
+                };
+            }
+
+            // If already loaded, do nothing
+            if (this.categoryStates[categoryId].loaded) {
+                return;
+            }
+
+            // Fetch items (page 1)
+            this.isLoading = true;
+            await this.fetchItems(categoryId, 1);
+            this.isLoading = false;
+        },
+
+        async loadMore(categoryId) {
+            const state = this.categoryStates[categoryId];
+            if (state.isLoadingMore || !state.hasMore) return;
+
+            state.isLoadingMore = true;
+            await this.fetchItems(categoryId, state.page + 1);
+            state.isLoadingMore = false;
+        },
+
+        async fetchItems(categoryId, page) {
+            try {
+                const response = await fetch(`{{ route('restaurants.category-items', ['restaurant' => $restaurant->id, 'category' => ':categoryId']) }}?page=${page}`.replace(':categoryId', categoryId));
+                const data = await response.json();
+
+                if (data.success) {
+                    const container = document.getElementById(`category-content-${categoryId}`);
+                    
+                    if (page === 1) {
+                        container.innerHTML = data.html;
+                    } else {
+                        // Create a temporary container to hold new HTML
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = data.html;
+                        
+                        // Append children to main container
+                        while (tempDiv.firstChild) {
+                            container.appendChild(tempDiv.firstChild);
+                        }
+                    }
+                    
+                    // Update state
+                    this.categoryStates[categoryId].loaded = true;
+                    this.categoryStates[categoryId].page = page;
+                    this.categoryStates[categoryId].hasMore = data.hasMore;
+
+                    // Initialize Alpine components
+                    this.$nextTick(() => {
+                        if (window.Alpine) {
+                            // We need to be careful not to re-init existing components if appending
+                            // But initTree usually handles this safely or we can init specific new elements
+                            // For simplicity, re-scanning the container is usually fine in v3
+                            window.Alpine.initTree(container);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading category items:', error);
+            }
+        }
+    }
+}
+</script>
+@endpush
 @endsection
