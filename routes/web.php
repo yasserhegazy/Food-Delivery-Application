@@ -16,6 +16,9 @@ Route::get('/', function () {
 
 // Public restaurant routes
 Route::get('/restaurants', [App\Http\Controllers\PublicRestaurantController::class, 'index'])->name('restaurants.index');
+Route::get('/restaurants/search', [App\Http\Controllers\PublicRestaurantController::class, 'search'])->name('restaurants.search');
+Route::get('/restaurants/suggestions', [App\Http\Controllers\PublicRestaurantController::class, 'suggestions'])->name('restaurants.suggestions');
+Route::get('/restaurants/filters', [App\Http\Controllers\PublicRestaurantController::class, 'filters'])->name('restaurants.filters');
 Route::get('/restaurants/{slug}', [App\Http\Controllers\PublicRestaurantController::class, 'show'])->name('restaurants.show');
 
 

@@ -3,42 +3,100 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurant;
+use App\Services\SearchService;
 use Illuminate\Http\Request;
 
 class PublicRestaurantController extends Controller
 {
+    protected $searchService;
+
+    public function __construct(SearchService $searchService)
+    {
+        $this->searchService = $searchService;
+    }
+
     /**
      * Display a listing of restaurants.
      */
     public function index(Request $request)
     {
-        $query = Restaurant::query()->active()->with('categories');
-
-        // Search
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%');
+        $query = $this->searchService->searchRestaurants($request->all());
+        
+        $restaurants = $query->paginate(12)->withQueryString();
+        
+        // Get filter options
+        $filterOptions = $this->searchService->getFilterOptions();
+        
+        // If AJAX request, return JSON
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'restaurants' => $restaurants,
+                'filters' => $filterOptions,
+            ]);
         }
 
-        // Filter by city
-        if ($request->filled('city')) {
-            $query->byCity($request->city);
+        return view('restaurants.index', [
+            'restaurants' => $restaurants,
+            'cities' => $filterOptions['cities'],
+            'cuisines' => $filterOptions['cuisines'],
+            'filterOptions' => $filterOptions,
+        ]);
+    }
+
+    /**
+     * AJAX search endpoint for live search
+     */
+    public function search(Request $request)
+    {
+        $query = $this->searchService->searchRestaurants($request->all());
+        
+        $restaurants = $query->paginate(12)->withQueryString();
+        
+        return response()->json([
+            'success' => true,
+            'data' => $restaurants,
+            'total' => $restaurants->total(),
+        ]);
+    }
+
+    /**
+     * Get autocomplete suggestions
+     */
+    public function suggestions(Request $request)
+    {
+        $query = $request->input('q', '');
+        
+        if (strlen($query) < 2) {
+            return response()->json([
+                'suggestions' => [],
+            ]);
         }
 
-        // Filter by rating
-        if ($request->filled('min_rating')) {
-            $query->where('rating', '>=', $request->min_rating);
+        $suggestions = $this->searchService->getSearchSuggestions($query);
+        
+        // Record search for analytics
+        if (auth()->check()) {
+            $this->searchService->recordSearch($query, auth()->id());
         }
 
-        // Sort
-        $sortBy = $request->get('sort', 'rating');
-        $sortOrder = $request->get('order', 'desc');
-        $query->orderBy($sortBy, $sortOrder);
+        return response()->json([
+            'success' => true,
+            'suggestions' => $suggestions,
+            'popular' => $this->searchService->getPopularSearches(),
+        ]);
+    }
 
-        $restaurants = $query->paginate(12);
-        $cities = Restaurant::distinct()->pluck('city');
-
-        return view('restaurants.index', compact('restaurants', 'cities'));
+    /**
+     * Get available filter options
+     */
+    public function filters()
+    {
+        $filterOptions = $this->searchService->getFilterOptions();
+        
+        return response()->json([
+            'success' => true,
+            'filters' => $filterOptions,
+        ]);
     }
 
     /**
