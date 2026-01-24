@@ -1,54 +1,24 @@
-# Environment
+*.log
+.DS_Store
 .env
 .env.backup
 .env.production
-
-# Logs & OS junk
-*.log
-Thumbs.db
-.DS_Store
-
-# IDE / Editor files
+.phpactor.json
+.phpunit.result.cache
 /.fleet
 /.idea
 /.nova
 /.phpunit.cache
 /.vscode
 /.zed
-auth.json
-.phpactor.json
-.phpunit.result.cache
-
-# Dependencies
-/vendor
+/auth.json
 /node_modules
-
-# Laravel public build artifacts
 /public/build
 /public/hot
 /public/storage
-
-# Laravel storage (ignore everything EXCEPT app/public)
-/storage/*
-!/storage/app
-/storage/app/*
-!/storage/app/public
-/storage/app/public/*
-
-# Allow only image files inside storage/app/public (including subdirectories)
-# (remove file types you don’t want)
-!/storage/app/public/**/*.jpg
-!/storage/app/public/**/*.jpeg
-!/storage/app/public/**/*.png
-!/storage/app/public/**/*.gif
-!/storage/app/public/**/*.webp
-!/storage/app/public/**/*.svg
-!/storage/app/public/menu-items/
-
-# Disallow sensitive keys & cache
 /storage/*.key
 /storage/pail
-
-# Homestead
+/vendor
 Homestead.json
 Homestead.yaml
+Thumbs.db
