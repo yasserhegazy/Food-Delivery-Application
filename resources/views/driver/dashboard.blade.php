@@ -60,8 +60,8 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-2xl font-bold text-gray-800">0.0</p>
-                    <p class="text-sm text-gray-600">Rating</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ $averageRating ? number_format($averageRating, 1) : 'N/A' }}</p>
+                    <p class="text-sm text-gray-600">Average Rating</p>
                 </div>
             </div>
         </x-card>
