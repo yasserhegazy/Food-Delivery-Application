@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
 <div class="min-h-screen bg-gray-50 py-8" x-data="restaurantSearch()">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {{-- Header --}}
@@ -9,20 +13,116 @@
             <p class="mt-2 text-lg text-gray-600">Find your favorite meals from local restaurants</p>
         </div>
 
+        {{-- Recently Viewed Section --}}
+        @if($recentlyViewed->isNotEmpty())
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Recently Viewed
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                @foreach($recentlyViewed as $recent)
+                <a href="/restaurants/{{ $recent->slug }}" class="group">
+                    <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden flex items-center gap-4 p-3">
+                        <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex-shrink-0 overflow-hidden">
+                            @if($recent->cover_image)
+                                <img src="/storage/{{ $recent->cover_image }}" alt="{{ $recent->name }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    </svg>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="min-w-0">
+                            <h3 class="font-semibold text-gray-900 group-hover:text-orange-600 transition truncate">{{ $recent->name }}</h3>
+                            <p class="text-xs text-gray-500">{{ $recent->cuisine_type }}</p>
+                            <div class="flex items-center gap-1 mt-1">
+                                <svg class="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                <span class="text-xs font-medium text-gray-600">{{ $recent->rating }}</span>
+                                <span class="text-xs text-gray-400 ml-1">· {{ $recent->delivery_time }} min</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        {{-- Cuisine Filter Chips --}}
+        <div class="mb-6 overflow-x-auto scrollbar-hide">
+            <div class="flex gap-2 pb-2 min-w-max">
+                <button
+                    @click="filters.cuisine = ''; performSearch()"
+                    :class="filters.cuisine === '' ? 'bg-orange-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'"
+                    class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0">
+                    🍽️ All
+                </button>
+                @foreach($cuisines as $cuisine)
+                <button
+                    @click="filters.cuisine = '{{ $cuisine }}'; performSearch()"
+                    :class="filters.cuisine === '{{ $cuisine }}' ? 'bg-orange-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'"
+                    class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0">
+                    {{ $cuisine }}
+                </button>
+                @endforeach
+            </div>
+        </div>
+
         {{-- Search & Filters --}}
         <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
             <form @submit.prevent="performSearch" class="space-y-6">
-                {{-- Main Search Bar --}}
-                <div class="relative">
+                {{-- Main Search Bar with Autocomplete --}}
+                <div class="relative" @click.outside="showSuggestions = false">
                     <input 
                         type="text" 
                         x-model="filters.search"
-                        @input.debounce.300ms="performSearch"
+                        @input.debounce.300ms="fetchSuggestions(); performSearch()"
+                        @focus="filters.search.length >= 2 && (showSuggestions = true)"
+                        @keydown.escape="showSuggestions = false"
                         placeholder="Search for restaurants, cuisines, or dishes..."
                         class="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all pl-14">
                     <svg class="w-6 h-6 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
+
+                    {{-- Autocomplete Suggestions Dropdown --}}
+                    <div x-show="showSuggestions && suggestions.length > 0"
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 -translate-y-1"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-100"
+                         x-transition:leave-start="opacity-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 -translate-y-1"
+                         class="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden">
+                        <template x-for="(suggestion, idx) in suggestions" :key="idx">
+                            <a :href="suggestion.url || `/restaurants?search=${encodeURIComponent(suggestion.name)}`"
+                               class="flex items-center gap-3 px-4 py-3 hover:bg-orange-50 transition-colors border-b border-gray-50 last:border-b-0 cursor-pointer group">
+                                <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
+                                    <svg x-show="suggestion.type === 'restaurant'" class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    </svg>
+                                    <svg x-show="suggestion.type === 'cuisine'" class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0A1.702 1.702 0 014 15.546V12a9 9 0 0118 0v3.546z"></path>
+                                    </svg>
+                                    <svg x-show="!suggestion.type || (suggestion.type !== 'restaurant' && suggestion.type !== 'cuisine')" class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-medium text-gray-900 truncate group-hover:text-orange-600 transition-colors" x-text="suggestion.name"></p>
+                                    <p x-show="suggestion.cuisine_type" class="text-xs text-gray-500" x-text="suggestion.cuisine_type"></p>
+                                </div>
+                                <span x-show="suggestion.type" class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 capitalize group-hover:bg-orange-100 group-hover:text-orange-600 transition-colors" x-text="suggestion.type"></span>
+                            </a>
+                        </template>
+                    </div>
                 </div>
 
                 {{-- Filter Toggle Button (Mobile) --}}
@@ -304,7 +404,9 @@ function restaurantSearch() {
         restaurants: @json($restaurants->items()),
         totalResults: {{ $restaurants->total() }},
         loading: false,
-        showFilters: window.innerWidth >= 1024, // Show filters by default on desktop
+        showFilters: window.innerWidth >= 1024,
+        suggestions: [],
+        showSuggestions: false,
 
         get activeFilters() {
             const active = {};
@@ -318,6 +420,25 @@ function restaurantSearch() {
 
         get activeFilterCount() {
             return Object.keys(this.activeFilters).length;
+        },
+
+        async fetchSuggestions() {
+            const query = this.filters.search;
+            if (query.length < 2) {
+                this.suggestions = [];
+                this.showSuggestions = false;
+                return;
+            }
+            try {
+                const response = await fetch(`{{ route('restaurants.suggestions') }}?q=${encodeURIComponent(query)}`, {
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await response.json();
+                this.suggestions = data.suggestions || [];
+                this.showSuggestions = this.suggestions.length > 0;
+            } catch (e) {
+                this.suggestions = [];
+            }
         },
 
         async performSearch() {
@@ -346,6 +467,7 @@ function restaurantSearch() {
                 const data = await response.json();
                 this.restaurants = data.data.data;
                 this.totalResults = data.total;
+                this.showSuggestions = false;
             } catch (error) {
                 console.error('Search error:', error);
             } finally {

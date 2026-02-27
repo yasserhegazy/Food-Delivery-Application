@@ -138,13 +138,13 @@
                         <div>
                             <h4 class="text-sm font-medium text-gray-700 mb-3">Logo</h4>
                             @if($restaurant->logo)
-                                <img src="{{ asset('storage/' . $restaurant->logo) }}" 
+                                <img src="{{ $restaurant->logo_url }}" 
                                      alt="Logo" 
                                      class="w-32 h-32 object-cover rounded-lg mb-3">
                             @endif
                             <form action="{{ route('restaurant.profile.logo') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <x-image-upload name="logo" label="" :current="$restaurant->logo ? asset('storage/' . $restaurant->logo) : null" />
+                                <x-image-upload name="logo" label="" :current="$restaurant->logo_url" />
                                 <x-button type="submit" variant="secondary" class="mt-3">Upload Logo</x-button>
                             </form>
                         </div>
@@ -152,13 +152,13 @@
                         <div>
                             <h4 class="text-sm font-medium text-gray-700 mb-3">Cover Image</h4>
                             @if($restaurant->cover_image)
-                                <img src="{{ asset('storage/' . $restaurant->cover_image) }}" 
+                                <img src="{{ $restaurant->cover_image_url }}" 
                                      alt="Cover" 
                                      class="w-full h-32 object-cover rounded-lg mb-3">
                             @endif
                             <form action="{{ route('restaurant.profile.cover') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <x-image-upload name="cover_image" label="" :current="$restaurant->cover_image ? asset('storage/' . $restaurant->cover_image) : null" />
+                                <x-image-upload name="cover_image" label="" :current="$restaurant->cover_image_url" />
                                 <x-button type="submit" variant="secondary" class="mt-3">Upload Cover</x-button>
                             </form>
                         </div>
