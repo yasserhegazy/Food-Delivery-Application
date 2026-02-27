@@ -1,131 +1,215 @@
 # 🍔 Food Delivery Application
 
-A comprehensive full-stack food delivery platform built with Laravel and modern web technologies. This application enables customers to order food from multiple restaurants, track deliveries in real-time, and provides powerful analytics for administrators.
+**A production-ready, full-stack food delivery platform with multi-role access, real-time order tracking, and comprehensive analytics — built with Laravel 12 and modern web technologies.**
 
-![Laravel](https://img.shields.io/badge/Laravel-12.x-red?style=flat-square&logo=laravel)
-![PHP](https://img.shields.io/badge/PHP-8.2+-blue?style=flat-square&logo=php)
-![MySQL](https://img.shields.io/badge/MySQL-8.0+-orange?style=flat-square&logo=mysql)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?style=flat-square&logo=tailwind-css)
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Alpine.js](https://img.shields.io/badge/Alpine.js-3.x-8BC0D0?style=for-the-badge&logo=alpine.js&logoColor=white)](https://alpinejs.dev)
+[![Tests](https://img.shields.io/badge/Tests-26_passing-brightgreen?style=for-the-badge&logo=testinglibrary&logoColor=white)](#-testing)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+
+---
 
 ## 📋 Table of Contents
 
--   [Features](#-features)
--   [Tech Stack](#-tech-stack)
--   [Installation](#-installation)
--   [Database Setup](#-database-setup)
--   [Seeding Data](#-seeding-data)
--   [User Roles](#-user-roles)
--   [Project Structure](#-project-structure)
--   [Key Features by Role](#-key-features-by-role)
--   [API Endpoints](#-api-endpoints)
--   [Screenshots](#-screenshots)
--   [Contributing](#-contributing)
--   [License](#-license)
+- [Demo Screenshots](#-demo-screenshots)
+- [Feature Highlights](#-feature-highlights)
+- [Tech Stack](#-tech-stack)
+- [Architecture Overview](#-architecture-overview)
+- [Quick Start](#-quick-start)
+- [Full Installation Guide](#-full-installation-guide)
+- [Database & Seeding](#-database--seeding)
+- [Testing](#-testing)
+- [New Features](#-new-features)
+- [Project Structure](#-project-structure)
+- [API Routes Reference](#-api-routes-reference)
+- [Deployment Checklist](#-deployment-checklist)
+- [Technical Highlights](#-technical-highlights)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-## ✨ Features
+---
 
-### For Customers
+## 📸 Demo Screenshots
 
--   🔍 Browse restaurants by cuisine, location, and ratings
--   🛒 Shopping cart with real-time updates
--   📍 Multiple delivery addresses management
--   💳 Secure checkout process
--   📦 Order tracking with real-time status updates
--   🔔 In-app notifications for order updates
--   ⭐ Rate and review restaurants
--   📜 Order history
+> **Note:** Add your own screenshots to a `screenshots/` directory to showcase the app visually.
 
-### For Restaurant Owners
+| View | Screenshot |
+|------|-----------|
+| 🏠 Customer Dashboard | ![Customer Dashboard](screenshots/customer-dashboard.png) |
+| 🍽️ Restaurant Menu | ![Restaurant Menu](screenshots/restaurant-menu.png) |
+| 🛒 Cart & Checkout | ![Cart & Checkout](screenshots/cart-checkout.png) |
+| 📊 Admin Analytics | ![Admin Dashboard](screenshots/admin-dashboard.png) |
+| 🚗 Driver Deliveries | ![Driver Dashboard](screenshots/driver-dashboard.png) |
+| 🌙 Dark Mode | ![Dark Mode](screenshots/dark-mode.png) |
 
--   🏪 Restaurant profile management
--   📋 Menu and category management
--   🖼️ Menu item images
--   📊 Order management dashboard
--   🔄 Real-time order status updates
--   📈 Sales analytics
--   🔔 Notifications for new orders
+---
 
-### For Drivers
+## ✨ Feature Highlights
 
--   🚗 Available delivery requests
--   📍 Delivery address details
--   ✅ Accept/complete deliveries
--   📊 Delivery history
--   🔔 Notifications for new delivery opportunities
+### 🛍️ Customer Experience
+- 🔍 Browse restaurants by cuisine, city, and rating with **live search & autocomplete suggestions**
+- 🛒 Real-time shopping cart powered by Alpine.js
+- 📍 Multiple delivery address management (CRUD)
+- 💳 Secure checkout with promo code support
+- 📦 **Order timeline** — visual step-by-step tracking from placed → delivered
+- ❤️ **Favorite restaurants** — save and quickly reorder
+- 🎟️ **Promo codes** — percentage & fixed-amount discounts with validation
+- ⭐ Rate restaurants and **rate delivery drivers**
+- 👤 **Customer profile** with avatar uploads
+- 📜 Full order history with filtering
+- 🌙 **Dark mode toggle** — system-wide theme switching
 
-### For Administrators
+### 🏪 Restaurant Owner Tools
+- 🖼️ Restaurant profile with logo & cover image uploads
+- 📋 Full menu management — categories, items, images, availability toggle
+- 🔄 **Category reordering** for menu customization
+- 📊 Order management dashboard with real-time status updates
+- 📈 Sales analytics and popular item tracking
+- 🔔 Instant notifications for new orders
 
--   📊 Comprehensive analytics dashboard
--   📈 Revenue tracking with charts
--   👥 User management
--   🏪 Restaurant approval and management
--   📉 Order statistics
--   🎯 Popular items and restaurants tracking
--   📅 Date range filtering (7/30/90 days, year)
+### 🚗 Driver Dashboard
+- 📍 Available delivery requests with address details
+- ✅ Accept, pick up, and complete deliveries
+- ⭐ **Driver rating system** — customers rate delivery experience
+- 📊 Delivery history and earnings tracking
+
+### 🛡️ Admin Panel
+- 📊 Comprehensive analytics with **Chart.js visualizations**
+- 📈 Revenue tracking (7 / 30 / 90 days, year-to-date)
+- 👥 Full user management (view, edit, toggle status)
+- 🏪 Restaurant & category & menu item oversight
+- 🎯 Top restaurants and popular items tracking
+
+---
 
 ## 🛠️ Tech Stack
 
-### Backend
+| Layer | Technology | Why |
+|-------|-----------|-----|
+| **Framework** | Laravel 12.x | Mature PHP framework with elegant ORM, migrations, queues, and built-in testing |
+| **Language** | PHP 8.2+ | Modern type system, enums, fibers, and named arguments |
+| **Database** | MySQL 8.0+ | Reliable relational DB with JSON support and full-text indexing |
+| **Auth** | Laravel Breeze | Lightweight authentication scaffolding with session-based auth |
+| **Frontend** | TailwindCSS 3.x | Utility-first CSS for rapid, consistent UI development |
+| **Interactivity** | Alpine.js 3.x | Lightweight reactive framework — perfect for cart updates, toggles, and modals without a heavy SPA |
+| **Charts** | Chart.js | Canvas-based charting for admin analytics dashboards |
+| **Build** | Vite | Blazing-fast HMR and asset bundling for development and production |
+| **Icons** | Heroicons | Consistent SVG icon set designed for Tailwind projects |
 
--   **Framework**: Laravel 12.x
--   **Language**: PHP 8.2+
--   **Database**: MySQL 8.0+
--   **Authentication**: Laravel Breeze
--   **Notifications**: Laravel Database Notifications
+---
 
-### Frontend
+## 🏗️ Architecture Overview
 
--   **CSS Framework**: TailwindCSS 3.x
--   **JavaScript**: Alpine.js
--   **Charts**: Chart.js
--   **Icons**: Heroicons
+```
+┌─────────────────────────────────────────────────────────┐
+│                      Browser (Client)                    │
+│         TailwindCSS  ·  Alpine.js  ·  Chart.js          │
+└──────────────────────────┬──────────────────────────────┘
+                           │  HTTP / AJAX
+┌──────────────────────────▼──────────────────────────────┐
+│                    Laravel 12 Application                │
+│                                                          │
+│  ┌──────────┐  ┌──────────────┐  ┌───────────────────┐  │
+│  │  Routes   │→│  Middleware   │→│    Controllers     │  │
+│  │ (web.php) │  │ CheckRole    │  │ Admin / Customer / │  │
+│  │          │  │ CheckPerm    │  │ Restaurant / Driver│  │
+│  └──────────┘  └──────────────┘  └────────┬──────────┘  │
+│                                            │             │
+│       ┌────────────────────────────────────┼──────┐      │
+│       │                                    │      │      │
+│  ┌────▼─────┐  ┌──────────────┐  ┌────────▼───┐  │      │
+│  │  Form     │  │   Policies   │  │  Services  │  │      │
+│  │ Requests  │  │ (Auth Gates) │  │ CartService│  │      │
+│  │ (11 total)│  │ Order/Addr/  │  │ SearchSvc  │  │      │
+│  └──────────┘  │ Restaurant   │  └────────────┘  │      │
+│                └──────────────┘                   │      │
+│       ┌──────────────────────────────────────────┘      │
+│       │                                                  │
+│  ┌────▼──────┐  ┌──────────────┐  ┌───────────────────┐ │
+│  │  Eloquent  │  │Notifications │  │    Blade Views    │ │
+│  │  Models    │  │ OrderPlaced  │  │ 24+ components    │ │
+│  │ (14 total) │  │ StatusChange │  │ Layouts / Partials│ │
+│  └─────┬─────┘  │ NewDelivery  │  └───────────────────┘ │
+│        │        └──────────────┘                         │
+└────────┼─────────────────────────────────────────────────┘
+         │
+┌────────▼────────────────────────────────────────────────┐
+│                    MySQL 8.0+                            │
+│  Users · Restaurants · Categories · MenuItems · Orders   │
+│  Favorites · PromoCodes · OrderStatusHistories · Roles   │
+│  Permissions · Ratings · CartItems · Addresses           │
+│  + Performance indexes on hot columns                    │
+└─────────────────────────────────────────────────────────┘
+```
 
-### Development Tools
+**Key architectural decisions:**
 
--   **Package Manager**: Composer, NPM
--   **Build Tool**: Vite
--   **Version Control**: Git
+- **MVC + Service Layer** — Business logic extracted into `CartService` and `SearchService`, keeping controllers thin
+- **Role-Based Access Control** — Custom `CheckRole` and `CheckPermission` middleware with a `roles` / `permissions` / `role_permission` pivot schema
+- **Authorization Policies** — `OrderPolicy`, `AddressPolicy`, and `RestaurantPolicy` enforce ownership checks at the model level
+- **Form Request Validation** — 11 dedicated request classes (`ApplyPromoCodeRequest`, `StoreOrderRequest`, `MenuItemRequest`, etc.) keep validation out of controllers
+- **Notification System** — Laravel database notifications for order events (`OrderPlaced`, `OrderStatusChanged`, `NewDeliveryAvailable`)
+- **Factory & Seeder Pattern** — 6 factories + 10 seeders generate realistic test data at scale
 
-## 📥 Installation
+---
 
-### Prerequisites
+## ⚡ Quick Start
 
--   PHP 8.2 or higher
--   Composer
--   Node.js & NPM
--   MySQL 8.0 or higher
--   Git
-
-### Step 1: Clone the Repository
+Get up and running in 5 commands:
 
 ```bash
 git clone https://github.com/yasserhegazy/Food-Delivery-Application.git
 cd Food-Delivery-Application
+
+# Install everything & configure
+composer install && npm install
+cp .env.example .env && php artisan key:generate
+
+# Set your DB credentials in .env, then:
+php artisan migrate --seed && php artisan storage:link
+
+# Launch
+npm run dev &
+php artisan serve
 ```
 
-### Step 2: Install Dependencies
+Open **http://localhost:8000** — login with `admin@fooddelivery.com` / `password`.
+
+---
+
+## 📥 Full Installation Guide
+
+### Prerequisites
+
+| Requirement | Version |
+|------------|---------|
+| PHP | 8.2+ |
+| Composer | 2.x |
+| Node.js & NPM | 18+ |
+| MySQL | 8.0+ |
+| Git | 2.x |
+
+### Step 1 — Clone & Install
 
 ```bash
-# Install PHP dependencies
-composer install
+git clone https://github.com/yasserhegazy/Food-Delivery-Application.git
+cd Food-Delivery-Application
 
-# Install JavaScript dependencies
+composer install
 npm install
 ```
 
-### Step 3: Environment Configuration
+### Step 2 — Environment Setup
 
 ```bash
-# Copy environment file
 cp .env.example .env
-
-# Generate application key
 php artisan key:generate
 ```
 
-### Step 4: Configure Database
-
-Edit `.env` file with your database credentials:
+Edit `.env` with your database credentials:
 
 ```env
 DB_CONNECTION=mysql
@@ -136,352 +220,455 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
-### Step 5: Run Migrations
+### Step 3 — Database & Storage
 
 ```bash
 php artisan migrate
-```
-
-### Step 6: Seed Database
-
-```bash
-# Seed with dummy data (recommended for testing)
 php artisan db:seed --class=DummyDataSeeder
-
-# Or seed all seeders
-php artisan db:seed
-```
-
-### Step 7: Create Storage Link
-
-```bash
 php artisan storage:link
 ```
 
-### Step 8: Build Assets
+### Step 4 — Build & Serve
 
 ```bash
-# Development
+# Development (with HMR)
 npm run dev
 
-# Production
-npm run build
-```
-
-### Step 9: Start Development Server
-
-```bash
+# In a separate terminal
 php artisan serve
 ```
 
-Visit `http://localhost:8000` in your browser.
+For production builds:
 
-## 🗄️ Database Setup
+```bash
+npm run build
+```
 
-### Migrations
+Visit **http://localhost:8000** in your browser.
 
-The application includes migrations for:
+---
 
--   Users (with roles)
--   Restaurants
--   Categories
--   Menu Items
--   Addresses
--   Orders & Order Items
--   Restaurant Ratings
--   Notifications
+## 🗄️ Database & Seeding
+
+### Schema Overview
+
+The application includes **23 migrations** covering:
+
+| Table | Purpose |
+|-------|---------|
+| `users` | All users with role associations |
+| `roles` / `permissions` / `role_permission` | RBAC system |
+| `restaurants` | Restaurant profiles with cuisine & search indexes |
+| `categories` | Menu categories per restaurant |
+| `menu_items` | Individual food items with pricing |
+| `cart_items` | Persistent shopping cart |
+| `addresses` | Customer delivery addresses |
+| `orders` / `order_items` | Order records and line items |
+| `order_status_histories` | **Order timeline** tracking every status change |
+| `favorites` | Customer ↔ Restaurant favorites |
+| `promo_codes` | Discount codes with usage limits and expiry |
+| `restaurant_ratings` | Customer reviews |
+| `notifications` | In-app notification store |
 
 ### Seeders
 
-#### DummyDataSeeder
-
-Generates comprehensive test data:
-
--   **95 Users** (50 customers, 15 drivers, 20 restaurant owners, 1 admin)
--   **25 Restaurants** with varied cuisines
--   **248 Categories** across restaurants
--   **6,000+ Menu Items** with realistic prices
--   **200+ Addresses** for customers
--   **500-1000 Orders** spread over 90 days
--   **2,000+ Order Items**
--   **100-200 Restaurant Ratings**
+| Seeder | What it generates |
+|--------|------------------|
+| **DummyDataSeeder** | 95 users, 25 restaurants, 248 categories, 6,000+ menu items, 200+ addresses, 500–1,000 orders, 2,000+ order items, 100–200 ratings |
+| **AdminUserSeeder** | Default admin (`admin@fooddelivery.com` / `password`) |
+| **RolePermissionSeeder** | Roles and permissions setup |
+| **PromoCodeSeeder** | Sample promotional codes |
+| Individual seeders | `RestaurantSeeder`, `CategorySeeder`, `MenuItemSeeder`, `CustomerUserSeeder`, `DriverSeeder` |
 
 ```bash
+# Full seed (recommended)
 php artisan db:seed --class=DummyDataSeeder
+
+# Just the admin account
+php artisan db:seed --class=AdminUserSeeder
+
+# All seeders
+php artisan db:seed
 ```
 
-#### AdminUserSeeder
+### Default Accounts
 
-Creates a default admin account:
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | `admin@fooddelivery.com` | `password` |
 
-```
-Email: admin@fooddelivery.com
-Password: password
-```
+> 💡 The `DummyDataSeeder` also creates 50 customers, 15 drivers, and 20 restaurant owners with random credentials.
+
+---
+
+## 🧪 Testing
+
+The project includes a **26-test suite** covering authentication, cart operations, checkout flow, order management, and restaurant menu CRUD.
 
 ```bash
-php artisan db:seed --class=AdminUserSeeder
+# Run the full test suite
+php artisan test
+
+# Run with verbose output
+php artisan test --verbose
+
+# Run a specific test file
+php artisan test tests/Feature/Customer/CartTest.php
+
+# Run by filter
+php artisan test --filter=CheckoutTest
 ```
 
-## 👥 User Roles
+### Test Coverage
 
-### 1. Customer
+| Test File | Tests | Covers |
+|-----------|-------|--------|
+| `Auth/LoginTest` | 4 | Login validation, redirect, authentication |
+| `Auth/RegistrationTest` | 4 | Registration flow, validation, role assignment |
+| `Customer/CartTest` | 4 | Add to cart, update quantity, remove, clear |
+| `Customer/CheckoutTest` | 4 | Checkout page, order placement, address validation |
+| `Customer/OrderTest` | 3 | Order listing, order details, authorization |
+| `Restaurant/MenuItemTest` | 5 | CRUD operations, image uploads, validation |
+| `Feature/ExampleTest` | 1 | Application bootstrap |
+| `Unit/ExampleTest` | 1 | Basic unit test |
 
--   Browse and order from restaurants
--   Manage delivery addresses
--   Track orders
--   Rate restaurants
+---
 
-### 2. Restaurant Owner
+## 🆕 New Features
 
--   Manage restaurant profile
--   Create and update menu items
--   Process orders
--   View analytics
+### ❤️ Favorites System
+Customers can favorite restaurants for quick access. One-click toggle with a dedicated favorites page showing all saved restaurants.
 
-### 3. Driver
+### 🎟️ Promo Codes
+Full promo code engine supporting:
+- **Percentage** and **fixed-amount** discounts
+- Minimum order amount requirements
+- Maximum discount caps
+- Usage limits and expiration dates
+- Real-time validation via `ApplyPromoCodeRequest`
 
--   View available deliveries
--   Accept delivery requests
--   Update delivery status
+### 📦 Order Timeline
+A visual `<x-order-timeline>` Blade component that renders every status change with timestamps — from order placed through preparation, pickup, and delivery.
 
-### 4. Admin
+### ⭐ Driver Ratings
+After delivery, customers can rate their driver. The `driver_rating` field on orders captures delivery experience separately from restaurant ratings.
 
--   Full platform access
--   User management
--   Analytics dashboard
--   Restaurant approval
+### 🌙 Dark Mode
+A `<x-dark-mode-toggle>` component provides system-wide dark/light theme switching, persisted via local storage and applied with Tailwind's `dark:` variant classes.
+
+### 👤 Customer Profile
+Customers can edit personal details, upload an avatar via `ProfileController`, and manage their delivery addresses — all from a dedicated profile page.
+
+### 🔍 Advanced Search
+The `SearchService` powers restaurant search with:
+- Text search across name and description
+- Cuisine and city filters
+- Rating-based sorting
+- **Cached filter options** for performance
+
+---
 
 ## 📁 Project Structure
 
 ```
-food-delivery/
+Food-Delivery-Application/
 ├── app/
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── Admin/
-│   │   │   │   └── AdminDashboardController.php
+│   │   │   │   ├── AdminDashboardController.php
+│   │   │   │   ├── CategoryController.php
+│   │   │   │   ├── MenuItemController.php
+│   │   │   │   ├── RestaurantController.php
+│   │   │   │   └── UserController.php
 │   │   │   ├── Customer/
+│   │   │   │   ├── AddressController.php
+│   │   │   │   ├── CartController.php
 │   │   │   │   ├── CheckoutController.php
-│   │   │   │   └── RestaurantController.php
+│   │   │   │   ├── CustomerDashboardController.php
+│   │   │   │   ├── FavoriteController.php       # ← NEW
+│   │   │   │   ├── OrderController.php
+│   │   │   │   ├── ProfileController.php        # ← NEW
+│   │   │   │   ├── PromoCodeController.php      # ← NEW
+│   │   │   │   └── RatingController.php
 │   │   │   ├── Driver/
 │   │   │   │   └── DriverDashboardController.php
 │   │   │   ├── Restaurant/
+│   │   │   │   ├── CategoryController.php
 │   │   │   │   ├── MenuItemController.php
-│   │   │   │   └── RestaurantOrderController.php
-│   │   │   └── NotificationController.php
-│   │   └── Middleware/
-│   │       └── CheckRole.php
-│   ├── Models/
-│   │   ├── User.php
-│   │   ├── Restaurant.php
+│   │   │   │   ├── RestaurantDashboardController.php
+│   │   │   │   ├── RestaurantOrderController.php
+│   │   │   │   └── RestaurantProfileController.php
+│   │   │   ├── AuthController.php
+│   │   │   ├── ContactController.php
+│   │   │   ├── DashboardController.php
+│   │   │   ├── HomeController.php
+│   │   │   ├── NotificationController.php
+│   │   │   └── PublicRestaurantController.php
+│   │   ├── Middleware/
+│   │   │   ├── CheckPermission.php
+│   │   │   └── CheckRole.php
+│   │   └── Requests/                            # 11 Form Requests
+│   │       ├── ApplyPromoCodeRequest.php
+│   │       ├── CategoryRequest.php
+│   │       ├── LoginRequest.php
+│   │       ├── MenuItemRequest.php
+│   │       ├── RegisterRequest.php
+│   │       ├── RestaurantRequest.php
+│   │       ├── StoreAddressRequest.php
+│   │       ├── StoreMenuItemRequest.php
+│   │       ├── StoreOrderRequest.php
+│   │       ├── UpdateMenuItemRequest.php
+│   │       └── UpdateRestaurantProfileRequest.php
+│   ├── Models/                                  # 14 Eloquent Models
+│   │   ├── Address.php
+│   │   ├── CartItem.php
 │   │   ├── Category.php
+│   │   ├── Favorite.php                         # ← NEW
 │   │   ├── MenuItem.php
 │   │   ├── Order.php
 │   │   ├── OrderItem.php
-│   │   ├── Address.php
-│   │   └── RestaurantRating.php
+│   │   ├── OrderStatusHistory.php               # ← NEW
+│   │   ├── Permission.php
+│   │   ├── PromoCode.php                        # ← NEW
+│   │   ├── Restaurant.php
+│   │   ├── RestaurantRating.php
+│   │   ├── Role.php
+│   │   └── User.php
 │   ├── Notifications/
+│   │   ├── NewDeliveryAvailable.php
 │   │   ├── OrderPlaced.php
-│   │   ├── OrderStatusChanged.php
-│   │   └── NewDeliveryAvailable.php
+│   │   └── OrderStatusChanged.php
+│   ├── Policies/
+│   │   ├── AddressPolicy.php
+│   │   ├── OrderPolicy.php
+│   │   └── RestaurantPolicy.php
+│   ├── Providers/
 │   └── Services/
-│       └── CartService.php
+│       ├── CartService.php
+│       └── SearchService.php
 ├── database/
-│   ├── factories/
-│   │   ├── RestaurantFactory.php
-│   │   ├── CategoryFactory.php
-│   │   ├── MenuItemFactory.php
-│   │   ├── AddressFactory.php
-│   │   └── RestaurantRatingFactory.php
-│   ├── migrations/
-│   └── seeders/
-│       ├── DummyDataSeeder.php
-│       └── AdminUserSeeder.php
-├── resources/
-│   ├── views/
-│   │   ├── admin/
-│   │   │   └── dashboard.blade.php
-│   │   ├── customer/
-│   │   ├── driver/
-│   │   ├── restaurant/
-│   │   ├── components/
-│   │   │   ├── notification-bell.blade.php
-│   │   │   └── cart-icon.blade.php
-│   │   └── notifications/
-│   │       └── index.blade.php
-│   └── css/
-│       └── app.css
-└── routes/
-    └── web.php
+│   ├── factories/                               # 6 Model Factories
+│   ├── migrations/                              # 23 Migrations
+│   └── seeders/                                 # 10 Seeders
+├── resources/views/
+│   ├── admin/
+│   ├── customer/
+│   │   ├── addresses/
+│   │   ├── cart/
+│   │   ├── checkout/
+│   │   ├── favorites/                           # ← NEW
+│   │   ├── orders/
+│   │   ├── profile/                             # ← NEW
+│   │   └── dashboard.blade.php
+│   ├── components/                              # 24 Blade Components
+│   │   ├── dark-mode-toggle.blade.php           # ← NEW
+│   │   ├── driver-rating-form.blade.php         # ← NEW
+│   │   ├── order-timeline.blade.php             # ← NEW
+│   │   ├── skeleton-card.blade.php              # ← NEW
+│   │   └── ... (20 more)
+│   ├── driver/
+│   ├── layouts/
+│   ├── notifications/
+│   └── restaurant/
+├── routes/web.php                               # ~150 lines, 4 role groups
+├── tests/
+│   ├── Feature/                                 # 26 tests across 7 files
+│   └── Unit/
+└── ...config, public, storage, vendor
 ```
 
-## 🎯 Key Features by Role
+---
 
-### Customer Features
+## 🔌 API Routes Reference
 
-| Feature           | Description                         |
-| ----------------- | ----------------------------------- |
-| Restaurant Browse | Filter by cuisine, city, rating     |
-| Menu View         | Browse categories and items         |
-| Shopping Cart     | Add/remove items, update quantities |
-| Checkout          | Select address, place order         |
-| Order Tracking    | Real-time status updates            |
-| Notifications     | Order status changes                |
-| Ratings           | Rate restaurants after delivery     |
+### Public
 
-### Restaurant Owner Features
-
-| Feature            | Description                              |
-| ------------------ | ---------------------------------------- |
-| Profile Management | Update restaurant details                |
-| Menu Management    | CRUD operations for categories and items |
-| Order Dashboard    | View and manage incoming orders          |
-| Status Updates     | Update order preparation status          |
-| Analytics          | View sales and popular items             |
-
-### Driver Features
-
-| Feature           | Description                  |
-| ----------------- | ---------------------------- |
-| Available Orders  | View ready-for-pickup orders |
-| Accept Delivery   | Claim delivery assignments   |
-| Complete Delivery | Mark orders as delivered     |
-| History           | View past deliveries         |
-
-### Admin Features
-
-| Feature             | Description                            |
-| ------------------- | -------------------------------------- |
-| Analytics Dashboard | Revenue, orders, user growth           |
-| Charts              | Revenue trends, order status breakdown |
-| Popular Items       | Top restaurants and menu items         |
-| User Management     | Manage all platform users              |
-| Date Filtering      | 7/30/90 days, year-to-date             |
-
-## 🔌 API Endpoints
+```
+GET    /                              Home page
+GET    /restaurants                   Browse all restaurants
+GET    /restaurants/search            Search with filters
+GET    /restaurants/suggestions       Autocomplete suggestions
+GET    /restaurants/filters           Available filter options
+GET    /restaurants/{slug}            Restaurant detail page
+GET    /restaurants/{restaurant}/categories/{category}   Category items
+```
 
 ### Authentication
 
 ```
-POST   /register
-POST   /login
-POST   /logout
+GET|POST  /login                     Login
+GET|POST  /register                  Register
+POST      /logout                    Logout
 ```
 
-### Customer
+### Customer (`/customer/*`)
 
 ```
-GET    /restaurants
-GET    /restaurants/{slug}
-POST   /cart/add
-POST   /cart/remove
-GET    /checkout
-POST   /checkout
-GET    /orders
-GET    /orders/{id}
+GET    /dashboard                    Customer home
+GET    /cart                         View cart
+POST   /cart/add                     Add item
+PATCH  /cart/{item}                  Update quantity
+DELETE /cart/{item}                  Remove item
+DELETE /cart/clear                   Clear cart
+GET    /checkout                     Checkout page
+POST   /checkout                     Place order
+GET    /checkout/success/{order}     Confirmation
+GET    /orders                       Order history
+GET    /orders/{order}               Order detail + timeline
+POST   /promo/apply                  Apply promo code
+POST   /promo/remove                 Remove promo code
+GET    /favorites                    Favorite restaurants
+POST   /favorites/{restaurant}/toggle Toggle favorite
+GET    /profile                      Edit profile
+PUT    /profile                      Update profile
+POST   /profile/avatar               Upload avatar
+CRUD   /addresses                    Manage addresses
+POST   /restaurants/{restaurant}/rate Rate restaurant
+POST   /orders/{order}/rate-driver   Rate driver
 ```
 
-### Restaurant Owner
+### Restaurant Owner (`/restaurant/*`)
 
 ```
-GET    /restaurant/dashboard
-GET    /restaurant/menu
-POST   /restaurant/menu-items
-PUT    /restaurant/menu-items/{id}
-DELETE /restaurant/menu-items/{id}
-GET    /restaurant/orders
-POST   /restaurant/orders/{id}/status
+GET    /dashboard                    Restaurant home
+GET    /profile/edit                 Edit profile
+PUT    /profile                      Update profile
+POST   /profile/logo                 Upload logo
+POST   /profile/cover                Upload cover image
+CRUD   /categories                   Manage categories
+POST   /categories/reorder           Reorder categories
+CRUD   /menu                         Manage menu items
+POST   /menu/{menu}/toggle           Toggle item availability
+GET    /orders                       View orders
+GET    /orders/{order}               Order detail
+PATCH  /orders/{order}/status        Update order status
 ```
 
-### Driver
+### Driver (`/driver/*`)
 
 ```
-GET    /driver/dashboard
-GET    /driver/available-deliveries
-POST   /driver/accept/{orderId}
-POST   /driver/complete/{orderId}
+GET    /dashboard                    Driver home
+GET    /deliveries/available         Available deliveries
+GET    /deliveries/my-deliveries     My deliveries
+POST   /deliveries/{order}/accept    Accept delivery
+PATCH  /deliveries/{order}/status    Update delivery status
+GET    /deliveries/{order}           Delivery detail
 ```
 
-### Admin
+### Admin (`/admin/*`)
 
 ```
-GET    /admin/dashboard
-GET    /admin/users
-GET    /admin/restaurants
-POST   /admin/restaurants/{id}/approve
+GET    /dashboard                    Analytics dashboard
+GET    /users                        User list
+GET    /users/{user}                 User detail
+GET    /users/{user}/edit            Edit user
+PUT    /users/{user}                 Update user
+DELETE /users/{user}                 Delete user
+POST   /users/{user}/toggle-status   Enable/disable user
+GET    /restaurants                   All restaurants
+GET    /restaurants/{restaurant}     Restaurant detail
+GET    /categories                   All categories
+GET    /menu-items                   All menu items
 ```
 
-### Notifications
+### Notifications (all authenticated users)
 
 ```
-GET    /notifications
-POST   /notifications/{id}/read
-POST   /notifications/read-all
-GET    /notifications/unread-count
+GET    /notifications                List notifications
+POST   /notifications/{id}/read      Mark as read
+POST   /notifications/read-all       Mark all as read
+GET    /notifications/unread-count   Unread count (AJAX)
 ```
 
-## 📸 Screenshots
+---
 
-### Customer Dashboard
+## 🚀 Deployment Checklist
 
-Browse restaurants, view menus, and place orders with an intuitive interface.
+- [ ] Set `APP_ENV=production` and `APP_DEBUG=false` in `.env`
+- [ ] Configure production MySQL credentials
+- [ ] Run `composer install --optimize-autoloader --no-dev`
+- [ ] Run `npm run build`
+- [ ] Run `php artisan config:cache`
+- [ ] Run `php artisan route:cache`
+- [ ] Run `php artisan view:cache`
+- [ ] Run `php artisan storage:link`
+- [ ] Set up SSL/TLS certificate
+- [ ] Configure queue workers (`php artisan queue:work`)
+- [ ] Set up cron for `php artisan schedule:run`
+- [ ] Verify file permissions on `storage/` and `bootstrap/cache/`
+- [ ] Set up database backups
+- [ ] Configure logging (daily rotation recommended)
 
-### Restaurant Dashboard
+---
 
-Manage menu items, process orders, and track performance.
+## 💡 Technical Highlights
 
-### Admin Analytics
+> *Sections like this demonstrate depth of understanding to hiring managers and reviewers.*
 
-Comprehensive analytics with Chart.js visualizations showing revenue trends, order statistics, and popular items.
+### 🔐 Authorization & Security
+- **3 Eloquent Policies** (`OrderPolicy`, `AddressPolicy`, `RestaurantPolicy`) enforce model-level ownership — users can only view/modify their own resources
+- **11 Form Request classes** validate and sanitize all user input before it reaches controllers
+- **Role + Permission middleware** — `CheckRole` and `CheckPermission` gate every route group
 
-### Notifications
+### ⚡ Performance Optimizations
+- **Eager loading** (`with()`) on all relationship-heavy queries to eliminate N+1 problems
+- **Database indexes** — dedicated migration (`add_performance_indexes`) adds composite indexes on `orders.status`, `orders.user_id`, `orders.restaurant_id`, and more
+- **Search indexes** on `restaurants.cuisine` and full-text columns for fast filtering
+- **Cached filter options** in `SearchService` to avoid repeated aggregate queries
 
-Real-time in-app notifications for order updates and delivery status changes.
+### 🧩 Design Patterns
+- **Service Layer** — `CartService` and `SearchService` encapsulate complex business logic
+- **Form Request Pattern** — validation separated from controllers into dedicated request classes
+- **Factory + Seeder** — 6 factories and 10 seeders for deterministic, scalable test data generation
+- **Blade Component Architecture** — 24 reusable components (`<x-order-timeline>`, `<x-dark-mode-toggle>`, `<x-skeleton-card>`, etc.) for consistent UI
+- **Notification System** — Laravel's built-in database notifications with polymorphic `notifiable` support
 
-## 🚀 Deployment
+### 📐 What I Learned Building This
+- Designing a **multi-tenant role-based system** from scratch with proper authorization gates
+- Implementing **promo code logic** with edge cases: usage limits, expiry, minimum amounts, and max discount caps
+- Building **reusable Blade components** that work across light/dark themes
+- Writing **feature tests** that cover authentication, cart state, checkout flow, and CRUD operations
+- Optimizing database queries with **indexes and eager loading** to handle 6,000+ menu items efficiently
 
-### Production Checklist
-
--   [ ] Set `APP_ENV=production` in `.env`
--   [ ] Set `APP_DEBUG=false` in `.env`
--   [ ] Configure production database
--   [ ] Run `php artisan config:cache`
--   [ ] Run `php artisan route:cache`
--   [ ] Run `php artisan view:cache`
--   [ ] Run `npm run build`
--   [ ] Set up SSL certificate
--   [ ] Configure queue workers
--   [ ] Set up cron jobs for scheduled tasks
+---
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to the branch (`git push origin feature/amazing-feature`)
+5. **Open** a Pull Request
+
+Please ensure:
+- All existing tests pass (`php artisan test`)
+- New features include appropriate tests
+- Code follows existing conventions
+
+---
 
 ## 📝 License
 
 This project is open-sourced software licensed under the [MIT license](LICENSE).
 
+---
+
 ## 👨‍💻 Author
 
 **Yasser Hegazy**
 
--   GitHub: [@yasserhegazy](https://github.com/yasserhegazy)
-
-## 🙏 Acknowledgments
-
--   Laravel Framework
--   TailwindCSS
--   Chart.js
--   Alpine.js
--   All contributors and supporters
+- GitHub: [@yasserhegazy](https://github.com/yasserhegazy)
 
 ---
 
-**Note**: This is a learning/portfolio project. For production use, ensure proper security measures, testing, and optimization.
+## 🙏 Acknowledgments
+
+- [Laravel](https://laravel.com) — The PHP framework for web artisans
+- [TailwindCSS](https://tailwindcss.com) — Utility-first CSS framework
+- [Alpine.js](https://alpinejs.dev) — Lightweight JavaScript framework
+- [Chart.js](https://www.chartjs.org) — Flexible charting library
+- [Heroicons](https://heroicons.com) — Beautiful hand-crafted SVG icons
+
