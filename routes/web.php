@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Restaurant\RestaurantDashboardController;
 use App\Http\Controllers\Driver\DriverDashboardController;
@@ -10,9 +12,10 @@ use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/about', fn () => view('about'))->name('about');
+Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 // Public restaurant routes
 Route::get('/restaurants', [App\Http\Controllers\PublicRestaurantController::class, 'index'])->name('restaurants.index');
@@ -62,6 +65,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/restaurants/{restaurant}/rate', [App\Http\Controllers\Customer\RatingController::class, 'store'])->name('restaurants.rate');
         Route::patch('/ratings/{rating}', [App\Http\Controllers\Customer\RatingController::class, 'update'])->name('ratings.update');
         Route::delete('/ratings/{rating}', [App\Http\Controllers\Customer\RatingController::class, 'destroy'])->name('ratings.destroy');
+        Route::post('/orders/{order}/rate-driver', [App\Http\Controllers\Customer\RatingController::class, 'rateDriver'])->name('orders.rate-driver');
 
         // Address routes
         Route::resource('addresses', App\Http\Controllers\Customer\AddressController::class);
@@ -74,6 +78,19 @@ Route::middleware('auth')->group(function () {
         // Order routes
         Route::get('/orders', [App\Http\Controllers\Customer\OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [App\Http\Controllers\Customer\OrderController::class, 'show'])->name('orders.show');
+
+        // Promo code routes
+        Route::post('/promo/apply', [App\Http\Controllers\Customer\PromoCodeController::class, 'apply'])->name('promo.apply');
+        Route::post('/promo/remove', [App\Http\Controllers\Customer\PromoCodeController::class, 'remove'])->name('promo.remove');
+
+        // Favorite routes
+        Route::get('/favorites', [App\Http\Controllers\Customer\FavoriteController::class, 'index'])->name('favorites.index');
+        Route::post('/favorites/{restaurant}/toggle', [App\Http\Controllers\Customer\FavoriteController::class, 'toggle'])->name('favorites.toggle');
+
+        // Profile routes
+        Route::get('/profile', [App\Http\Controllers\Customer\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [App\Http\Controllers\Customer\ProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profile/avatar', [App\Http\Controllers\Customer\ProfileController::class, 'updateAvatar'])->name('profile.avatar');
     });
     
     // Restaurant owner routes
@@ -93,7 +110,7 @@ Route::middleware('auth')->group(function () {
         // Menu Items
         // Menu Items
         Route::resource('menu', App\Http\Controllers\Restaurant\MenuItemController::class);
-        Route::post('/menu/{menuItem}/toggle', [App\Http\Controllers\Restaurant\MenuItemController::class, 'toggleAvailability'])->name('menu.toggle');
+        Route::post('/menu/{menu}/toggle', [App\Http\Controllers\Restaurant\MenuItemController::class, 'toggleAvailability'])->name('menu.toggle');
 
         // Orders
         Route::get('/orders', [App\Http\Controllers\Restaurant\RestaurantOrderController::class, 'index'])->name('orders.index');
