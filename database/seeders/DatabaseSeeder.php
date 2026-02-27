@@ -29,5 +29,10 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             MenuItemSeeder::class,
         ]);
+
+        // Seed promo codes
+        $this->call([
+            PromoCodeSeeder::class,
+        ]);
     }
 }
