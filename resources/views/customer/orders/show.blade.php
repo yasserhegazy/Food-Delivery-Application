@@ -82,40 +82,13 @@
 
             {{-- Order Status Timeline --}}
             <x-card title="Order Status">
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full {{ in_array($order->status, ['pending', 'confirmed', 'preparing', 'ready_for_pickup', 'on_way', 'delivered']) ? 'bg-green-500' : 'bg-gray-300' }}"></div>
-                        <span class="text-sm {{ $order->status === 'pending' ? 'font-bold text-gray-900' : 'text-gray-600' }}">Order Placed</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full {{ in_array($order->status, ['confirmed', 'preparing', 'ready_for_pickup', 'on_way', 'delivered']) ? 'bg-green-500' : 'bg-gray-300' }}"></div>
-                        <span class="text-sm {{ $order->status === 'confirmed' ? 'font-bold text-gray-900' : 'text-gray-600' }}">Confirmed</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full {{ in_array($order->status, ['preparing', 'ready_for_pickup', 'on_way', 'delivered']) ? 'bg-green-500' : 'bg-gray-300' }}"></div>
-                        <span class="text-sm {{ $order->status === 'preparing' ? 'font-bold text-gray-900' : 'text-gray-600' }}">Preparing</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full {{ in_array($order->status, ['ready_for_pickup', 'on_way', 'delivered']) ? 'bg-green-500' : 'bg-gray-300' }}"></div>
-                        <span class="text-sm {{ $order->status === 'ready_for_pickup' ? 'font-bold text-gray-900' : 'text-gray-600' }}">Ready for Pickup</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full {{ in_array($order->status, ['on_way', 'delivered']) ? 'bg-green-500' : 'bg-gray-300' }}"></div>
-                        <span class="text-sm {{ $order->status === 'on_way' ? 'font-bold text-gray-900' : 'text-gray-600' }}">On the Way</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full {{ $order->status === 'delivered' ? 'bg-green-500' : 'bg-gray-300' }}"></div>
-                        <span class="text-sm {{ $order->status === 'delivered' ? 'font-bold text-gray-900' : 'text-gray-600' }}">Delivered</span>
-                    </div>
-                    
-                    @if($order->status === 'cancelled')
-                        <div class="flex items-center gap-3 mt-4 pt-4 border-t">
-                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                            <span class="text-sm font-bold text-red-600">Order Cancelled</span>
-                        </div>
-                    @endif
-                </div>
+                <x-order-timeline :order="$order" />
             </x-card>
+
+            {{-- Driver Rating Form --}}
+            @if($order->status === 'delivered' && $order->driver_id)
+                <x-driver-rating-form :order="$order" />
+            @endif
         </div>
     </div>
 </div>

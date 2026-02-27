@@ -5,7 +5,7 @@
     <!-- Restaurant Header -->
     <div class="relative h-64 bg-gray-200">
         @if($restaurant->cover_image)
-            <img src="{{ asset('storage/' . $restaurant->cover_image) }}" 
+            <img src="{{ $restaurant->cover_image_url }}" 
                  alt="{{ $restaurant->name }}" 
                  class="w-full h-full object-cover">
         @else
@@ -20,7 +20,7 @@
         <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
             <div class="flex items-start gap-6">
                 @if($restaurant->logo)
-                    <img src="{{ asset('storage/' . $restaurant->logo) }}" 
+                    <img src="{{ $restaurant->logo_url }}" 
                          alt="{{ $restaurant->name }} logo" 
                          class="w-24 h-24 rounded-xl shadow-lg object-cover flex-shrink-0">
                 @endif
@@ -262,6 +262,40 @@ function menuManager(initialCategoryId, initialHasMore) {
             }
         }
     }
+}
+</script>
+@endpush
+@push('scripts')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "{{ $restaurant->name }}",
+    "description": "{{ $restaurant->description }}",
+    @if($restaurant->address)
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ $restaurant->address }}"
+    },
+    @endif
+    @if($restaurant->phone)
+    "telephone": "{{ $restaurant->phone }}",
+    @endif
+    @if($restaurant->total_reviews > 0)
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ number_format($restaurant->rating, 1) }}",
+        "reviewCount": "{{ $restaurant->total_reviews }}"
+    },
+    @endif
+    @if($restaurant->categories->count() > 0)
+    "servesCuisine": [
+        @foreach($restaurant->categories as $cat)
+            "{{ $cat->name }}"@if(!$loop->last),@endif
+        @endforeach
+    ],
+    @endif
+    "url": "{{ url()->current() }}"
 }
 </script>
 @endpush

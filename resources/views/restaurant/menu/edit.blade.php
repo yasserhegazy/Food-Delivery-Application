@@ -79,13 +79,13 @@
                     @if($menuItem->image)
                         <div class="mb-4">
                             <p class="text-sm text-gray-600 mb-2">Current Image:</p>
-                            <img src="{{ asset('storage/' . $menuItem->image) }}" alt="{{ $menuItem->name }}" class="w-48 h-48 object-cover rounded-lg">
+                            <img src="{{ $menuItem->image_url }}" alt="{{ $menuItem->name }}" class="w-48 h-48 object-cover rounded-lg">
                         </div>
                     @endif
                     <x-image-upload 
                         name="image" 
                         label="Update Photo (optional)" 
-                        :current="$menuItem->image ? asset('storage/' . $menuItem->image) : null" />
+                        :current="$menuItem->image_url" />
                 </x-card>
 
                 <!-- Settings -->

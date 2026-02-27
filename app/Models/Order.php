@@ -12,8 +12,12 @@ class Order extends Model
         'delivery_address_id',
         'driver_id',
         'total_amount',
+        'discount_amount',
+        'promo_code',
         'status',
         'special_instructions',
+        'driver_rating',
+        'driver_review',
     ];
 
     public function user()
@@ -39,5 +43,10 @@ class Order extends Model
     public function driver()
     {
         return $this->belongsTo(User::class, 'driver_id');
+    }
+
+    public function statusHistory()
+    {
+        return $this->hasMany(OrderStatusHistory::class)->orderBy('created_at');
     }
 }

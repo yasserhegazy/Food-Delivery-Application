@@ -21,7 +21,7 @@
                         <div class="flex items-center justify-between mb-4 pb-4 border-b">
                             <div class="flex items-center gap-3">
                                 @if($restaurant->logo)
-                                    <img src="{{ asset('storage/' . $restaurant->logo) }}" 
+                                    <img src="{{ $restaurant->logo_url }}" 
                                          alt="{{ $restaurant->name }}"
                                          class="w-12 h-12 rounded-lg object-cover">
                                 @endif
@@ -97,7 +97,7 @@
                                 }" class="flex gap-4 p-4 bg-gray-50 rounded-lg">
                                     {{-- Item Image --}}
                                     @if($item->menuItem->image)
-                                        <img src="{{ asset('storage/' . $item->menuItem->image) }}" 
+                                        <img src="{{ $item->menuItem->image_url }}" 
                                              alt="{{ $item->menuItem->name }}"
                                              class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
                                     @else

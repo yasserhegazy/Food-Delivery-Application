@@ -63,7 +63,7 @@
                 {{-- Image --}}
                 @if($item->image)
                 <div class="aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                    <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="w-full h-full object-cover">
+                    <img src="{{ $item->image_url }}" alt="{{ $item->name }}" class="w-full h-full object-cover">
                 </div>
                 @else
                 <div class="aspect-video bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">

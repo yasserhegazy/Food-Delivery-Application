@@ -30,6 +30,8 @@ class RestaurantSeeder extends Seeder
                 'delivery_fee' => 3.99,
                 'rating' => 4.5,
                 'total_reviews' => 234,
+                'logo' => 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&q=80',
+                'cover_image' => 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80',
             ],
             [
                 'name' => 'Burger House',
@@ -46,6 +48,8 @@ class RestaurantSeeder extends Seeder
                 'delivery_fee' => 2.99,
                 'rating' => 4.7,
                 'total_reviews' => 189,
+                'logo' => 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&q=80',
+                'cover_image' => 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=80',
             ],
             [
                 'name' => 'Sushi Master',
@@ -62,6 +66,8 @@ class RestaurantSeeder extends Seeder
                 'delivery_fee' => 4.99,
                 'rating' => 4.8,
                 'total_reviews' => 312,
+                'logo' => 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=200&q=80',
+                'cover_image' => 'https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80',
             ],
             [
                 'name' => 'Taco Fiesta',
@@ -78,6 +84,8 @@ class RestaurantSeeder extends Seeder
                 'delivery_fee' => 2.49,
                 'rating' => 4.6,
                 'total_reviews' => 156,
+                'logo' => 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=200&q=80',
+                'cover_image' => 'https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=800&q=80',
             ],
             [
                 'name' => 'Pasta Bella',
@@ -94,6 +102,8 @@ class RestaurantSeeder extends Seeder
                 'delivery_fee' => 3.49,
                 'rating' => 4.4,
                 'total_reviews' => 98,
+                'logo' => 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=200&q=80',
+                'cover_image' => 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80',
             ],
         ];
 

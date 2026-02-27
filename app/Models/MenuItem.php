@@ -52,6 +52,13 @@ class MenuItem extends Model
     }
 
     // Accessors
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) return null;
+        if (str_starts_with($this->image, 'http')) return $this->image;
+        return asset('storage/' . $this->image);
+    }
+
     public function getFinalPriceAttribute()
     {
         return $this->discount_price ?? $this->price;

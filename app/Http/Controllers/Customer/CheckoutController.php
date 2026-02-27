@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreOrderRequest;
 use Illuminate\Http\Request;
 
 use App\Services\CartService;
+use App\Models\PromoCode;
+use App\Models\OrderStatusHistory;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
@@ -27,16 +30,14 @@ class CheckoutController extends Controller
         $cartTotal = $this->cartService->getCartTotal();
         $addresses = auth()->user()->addresses;
 
-        return view('customer.checkout.index', compact('cartItems', 'cartTotal', 'addresses'));
+        $promoCode = session('promo_code');
+        $promoDiscount = session('promo_discount', 0);
+
+        return view('customer.checkout.index', compact('cartItems', 'cartTotal', 'addresses', 'promoCode', 'promoDiscount'));
     }
 
-    public function store(Request $request)
+    public function store(StoreOrderRequest $request)
     {
-        $request->validate([
-            'address_id' => 'required|exists:addresses,id',
-            'special_instructions' => 'nullable|string|max:1000',
-        ]);
-
         $cartItems = $this->cartService->getCart();
         if ($cartItems->isEmpty()) {
             return redirect()->route('customer.cart.index')->with('error', 'Your cart is empty.');
@@ -52,11 +53,27 @@ class CheckoutController extends Controller
         try {
             DB::beginTransaction();
 
+            // Apply promo code discount if present
+            $discountAmount = 0;
+            $promoCodeValue = null;
+            $totalAmount = $this->cartService->getCartTotal();
+
+            if (session('promo_code')) {
+                $promo = PromoCode::where('code', session('promo_code'))->first();
+                if ($promo && $promo->isValid()) {
+                    $discountAmount = $promo->calculateDiscount($totalAmount);
+                    $promoCodeValue = $promo->code;
+                    $totalAmount -= $discountAmount;
+                }
+            }
+
             $order = \App\Models\Order::create([
                 'user_id' => auth()->id(),
                 'restaurant_id' => $restaurantId,
                 'delivery_address_id' => $address->id,
-                'total_amount' => $this->cartService->getCartTotal(),
+                'total_amount' => $totalAmount,
+                'discount_amount' => $discountAmount,
+                'promo_code' => $promoCodeValue,
                 'status' => 'pending',
                 'special_instructions' => $request->special_instructions,
             ]);
@@ -72,7 +89,19 @@ class CheckoutController extends Controller
                 ]);
             }
 
+            OrderStatusHistory::create([
+                'order_id' => $order->id,
+                'status' => 'pending',
+                'changed_by' => auth()->id(),
+            ]);
+
+            // Increment promo code uses
+            if ($promo ?? null) {
+                $promo->incrementUses();
+            }
+
             $this->cartService->clearCart();
+            session()->forget(['promo_code', 'promo_discount']);
 
             // Notify restaurant owner about new order
             $order->restaurant->user->notify(new \App\Notifications\OrderPlaced($order));

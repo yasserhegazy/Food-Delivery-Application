@@ -143,6 +143,30 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's favorites.
+     */
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    /**
+     * Get the user's favorite restaurants.
+     */
+    public function favoriteRestaurants()
+    {
+        return $this->belongsToMany(Restaurant::class, 'favorites');
+    }
+
+    /**
+     * Check if user has favorited a restaurant.
+     */
+    public function hasFavorited($restaurantId): bool
+    {
+        return $this->favorites()->where('restaurant_id', $restaurantId)->exists();
+    }
+
+    /**
      * Get the user's full address.
      */
     public function getFullAddressAttribute(): string

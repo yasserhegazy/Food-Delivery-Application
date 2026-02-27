@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Order;
+use App\Models\OrderStatusHistory;
 use Illuminate\Support\Facades\Auth;
 
 class DriverDashboardController extends Controller
@@ -15,7 +16,11 @@ class DriverDashboardController extends Controller
      */
     public function index()
     {
-        return redirect()->route('driver.deliveries.available');
+        $averageRating = Order::where('driver_id', Auth::id())
+            ->whereNotNull('driver_rating')
+            ->avg('driver_rating');
+
+        return view('driver.dashboard', compact('averageRating'));
     }
 
     /**
@@ -67,6 +72,12 @@ class DriverDashboardController extends Controller
             'status' => 'on_way',
         ]);
 
+        OrderStatusHistory::create([
+            'order_id' => $order->id,
+            'status' => 'on_way',
+            'changed_by' => Auth::id(),
+        ]);
+
         // Notify customer that order is on the way
         $order->user->notify(new \App\Notifications\OrderStatusChanged($order, 'on_way'));
 
@@ -87,6 +98,12 @@ class DriverDashboardController extends Controller
         ]);
 
         $order->update(['status' => $request->status]);
+
+        OrderStatusHistory::create([
+            'order_id' => $order->id,
+            'status' => $request->status,
+            'changed_by' => Auth::id(),
+        ]);
 
         return back()->with('success', 'Delivery status updated successfully.');
     }
