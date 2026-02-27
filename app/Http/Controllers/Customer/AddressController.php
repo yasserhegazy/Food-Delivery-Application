@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAddressRequest;
 use Illuminate\Http\Request;
 
 class AddressController extends Controller
@@ -18,16 +19,9 @@ class AddressController extends Controller
         return view('customer.addresses.form');
     }
 
-    public function store(Request $request)
+    public function store(StoreAddressRequest $request)
     {
-        $validated = $request->validate([
-            'label' => 'required|string|max:255',
-            'address_line_1' => 'required|string|max:255',
-            'address_line_2' => 'nullable|string|max:255',
-            'city' => 'required|string|max:255',
-            'zip_code' => 'required|string|max:20',
-            'is_default' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         if ($request->is_default) {
             auth()->user()->addresses()->update(['is_default' => false]);
@@ -40,26 +34,15 @@ class AddressController extends Controller
 
     public function edit(\App\Models\Address $address)
     {
-        if ($address->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->authorize('update', $address);
         return view('customer.addresses.form', compact('address'));
     }
 
-    public function update(Request $request, \App\Models\Address $address)
+    public function update(StoreAddressRequest $request, \App\Models\Address $address)
     {
-        if ($address->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->authorize('update', $address);
 
-        $validated = $request->validate([
-            'label' => 'required|string|max:255',
-            'address_line_1' => 'required|string|max:255',
-            'address_line_2' => 'nullable|string|max:255',
-            'city' => 'required|string|max:255',
-            'zip_code' => 'required|string|max:20',
-            'is_default' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         if ($request->is_default) {
             auth()->user()->addresses()->where('id', '!=', $address->id)->update(['is_default' => false]);
@@ -72,9 +55,7 @@ class AddressController extends Controller
 
     public function destroy(\App\Models\Address $address)
     {
-        if ($address->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->authorize('delete', $address);
 
         $address->delete();
 
