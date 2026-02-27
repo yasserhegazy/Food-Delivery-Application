@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Restaurant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MenuItemRequest;
+use App\Http\Requests\StoreMenuItemRequest;
+use App\Http\Requests\UpdateMenuItemRequest;
 use App\Models\MenuItem;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -66,7 +67,7 @@ class MenuItemController extends Controller
     /**
      * Store a newly created menu item.
      */
-    public function store(MenuItemRequest $request)
+    public function store(StoreMenuItemRequest $request)
     {
         $data = $request->validated();
         $data['slug'] = Str::slug($data['name']);
@@ -116,7 +117,7 @@ class MenuItemController extends Controller
     /**
      * Update the specified menu item.
      */
-    public function update(MenuItemRequest $request, MenuItem $menu)
+    public function update(UpdateMenuItemRequest $request, MenuItem $menu)
     {
         $restaurant = auth()->user()->restaurant;
         

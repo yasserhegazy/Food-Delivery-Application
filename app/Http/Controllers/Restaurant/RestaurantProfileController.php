@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Restaurant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RestaurantRequest;
+use App\Http\Requests\UpdateRestaurantProfileRequest;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,7 +24,7 @@ class RestaurantProfileController extends Controller
     /**
      * Update the restaurant profile.
      */
-    public function update(RestaurantRequest $request)
+    public function update(UpdateRestaurantProfileRequest $request)
     {
         $user = auth()->user();
         $restaurant = $user->restaurant;

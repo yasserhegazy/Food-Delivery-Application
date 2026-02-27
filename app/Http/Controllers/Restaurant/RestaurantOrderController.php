@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Order;
+use App\Models\OrderStatusHistory;
 use Illuminate\Support\Facades\Auth;
 
 class RestaurantOrderController extends Controller
@@ -29,7 +30,7 @@ class RestaurantOrderController extends Controller
             ->when($status === 'pending', function ($query) {
                 return $query->where('status', 'pending');
             })
-            ->with(['user', 'items'])
+            ->with(['user', 'items.menuItem', 'address', 'driver'])
             ->latest()
             ->paginate(10);
 
@@ -50,10 +51,7 @@ class RestaurantOrderController extends Controller
 
     public function updateStatus(Request $request, Order $order)
     {
-        $restaurant = Auth::user()->restaurant;
-        if ($order->restaurant_id !== $restaurant->id) {
-            abort(403);
-        }
+        $this->authorize('update', $order);
 
         $request->validate([
             'status' => 'required|in:confirmed,preparing,ready_for_pickup,on_way,delivered,cancelled',
@@ -62,6 +60,12 @@ class RestaurantOrderController extends Controller
         // Add logic to validate status transitions if needed (e.g., can't go from delivered to pending)
         
         $order->update(['status' => $request->status]);
+
+        OrderStatusHistory::create([
+            'order_id' => $order->id,
+            'status' => $request->status,
+            'changed_by' => Auth::id(),
+        ]);
 
         // Notify customer about status change
         $order->user->notify(new \App\Notifications\OrderStatusChanged($order, $request->status));
