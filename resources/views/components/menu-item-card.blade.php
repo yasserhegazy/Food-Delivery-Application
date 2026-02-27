@@ -1,10 +1,10 @@
 @props(['item'])
 
-<div x-data="{ showModal: false }" class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+<div x-data="{ showModal: false }" class="group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden animate-fade-in-up">
     <!-- Image -->
     <div class="relative h-48 bg-gray-200 overflow-hidden">
         @if($item->image)
-            <img src="{{ asset('storage/' . $item->image) }}" 
+            <img src="{{ $item->image_url }}" 
                  alt="{{ $item->name }}" 
                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
         @else
@@ -44,12 +44,12 @@
     
     <!-- Content -->
     <div class="p-4">
-        <h4 class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
+        <h4 class="font-bold text-gray-900 dark:text-white group-hover:text-orange-600 transition-colors">
             {{ $item->name }}
         </h4>
         
         @if($item->description)
-            <p class="text-sm text-gray-600 mt-1 line-clamp-2">
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
                 {{ $item->description }}
             </p>
         @endif
@@ -65,7 +65,7 @@
                         ${{ number_format($item->price, 2) }}
                     </span>
                 @else
-                    <span class="text-lg font-bold text-gray-900">
+                    <span class="text-lg font-bold text-gray-900 dark:text-white">
                         ${{ number_format($item->price, 2) }}
                     </span>
                 @endif
@@ -94,7 +94,7 @@
         </div>
         
         @if($item->preparation_time)
-            <div class="flex items-center gap-1 mt-2 text-xs text-gray-500">
+            <div class="flex items-center gap-1 mt-2 text-xs text-gray-500 dark:text-gray-400">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
@@ -114,7 +114,7 @@
                 <div class="flex items-center justify-center min-h-screen px-4">
                     <div class="fixed inset-0 bg-black opacity-50"></div>
                     
-                    <div class="relative bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+                    <div class="relative bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl">
                         <button @click="showModal = false" 
                                 class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,15 +122,15 @@
                             </svg>
                         </button>
                         
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ $item->name }}</h3>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ $item->name }}</h3>
                         
                         @if($item->image)
-                            <img src="{{ asset('storage/' . $item->image) }}" 
+                            <img src="{{ $item->image_url }}" 
                                  alt="{{ $item->name }}"
                                  class="w-full h-48 object-cover rounded-lg mb-4">
                         @endif
                         
-                        <p class="text-gray-600 mb-4">{{ $item->description }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">{{ $item->description }}</p>
                         
                         <div class="mb-6">
                             <span class="text-2xl font-bold text-orange-600">

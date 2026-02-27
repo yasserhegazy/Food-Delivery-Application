@@ -1,12 +1,12 @@
 @props(['restaurant'])
 
 <a href="{{ route('restaurants.show', $restaurant->slug) }}" 
-   class="group block bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+   class="group block bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1 animate-fade-in-up">
     
     <!-- Cover Image -->
     <div class="relative h-48 bg-gray-200 overflow-hidden">
         @if($restaurant->cover_image)
-            <img src="{{ asset('storage/' . $restaurant->cover_image) }}" 
+            <img src="{{ $restaurant->cover_image_url }}" 
                  alt="{{ $restaurant->name }}" 
                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
         @else
@@ -17,6 +17,26 @@
             </div>
         @endif
         
+        <!-- Favorite Button -->
+        @auth
+            @if(auth()->user()->isCustomer())
+                <div class="absolute top-3 left-3 z-10" x-data="{ favorited: {{ auth()->user()->hasFavorited($restaurant->id) ? 'true' : 'false' }} }">
+                    <button @click.prevent.stop="
+                        fetch('{{ route('customer.favorites.toggle', $restaurant) }}', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content }
+                        })
+                        .then(r => r.json())
+                        .then(data => { favorited = data.favorited })
+                    " class="w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors shadow-sm">
+                        <svg class="w-5 h-5 transition-colors" :class="favorited ? 'text-red-500 fill-current' : 'text-white'" :fill="favorited ? 'currentColor' : 'none'" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                </div>
+            @endif
+        @endauth
+
         <!-- Status Badge -->
         @if(!$restaurant->is_active)
             <div class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
@@ -32,7 +52,7 @@
         <!-- Logo -->
         @if($restaurant->logo)
             <div class="absolute -bottom-6 left-4 w-16 h-16 bg-white rounded-xl shadow-lg border-2 border-white overflow-hidden">
-                <img src="{{ asset('storage/' . $restaurant->logo) }}" 
+                <img src="{{ $restaurant->logo_url }}" 
                      alt="{{ $restaurant->name }} logo" 
                      class="w-full h-full object-cover">
             </div>
@@ -41,24 +61,24 @@
     
     <!-- Content -->
     <div class="p-4 {{ $restaurant->logo ? 'pt-8' : 'pt-4' }}">
-        <h3 class="text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-orange-600 transition-colors">
             {{ $restaurant->name }}
         </h3>
         
         @if($restaurant->description)
-            <p class="text-sm text-gray-600 mt-1 line-clamp-2">
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
                 {{ $restaurant->description }}
             </p>
         @endif
         
         <!-- Meta Info -->
-        <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
+        <div class="flex items-center gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
             <!-- Rating -->
             <div class="flex items-center gap-1">
                 <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
-                <span class="font-medium text-gray-900">{{ number_format($restaurant->rating, 1) }}</span>
+                <span class="font-medium text-gray-900 dark:text-white">{{ number_format($restaurant->rating, 1) }}</span>
                 <span>({{ $restaurant->total_reviews }})</span>
             </div>
             
