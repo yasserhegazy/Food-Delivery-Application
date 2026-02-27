@@ -144,6 +144,20 @@ class Restaurant extends Model
     }
 
     // Accessors
+    public function getLogoUrlAttribute()
+    {
+        if (!$this->logo) return null;
+        if (str_starts_with($this->logo, 'http')) return $this->logo;
+        return asset('storage/' . $this->logo);
+    }
+
+    public function getCoverImageUrlAttribute()
+    {
+        if (!$this->cover_image) return null;
+        if (str_starts_with($this->cover_image, 'http')) return $this->cover_image;
+        return asset('storage/' . $this->cover_image);
+    }
+
     public function getIsOpenAttribute()
     {
         if (!$this->opening_time || !$this->closing_time) {
