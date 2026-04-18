@@ -5,10 +5,22 @@ use Illuminate\Support\Str;
 $mysqlAttrSslCa = defined('Pdo\\Mysql::ATTR_SSL_CA')
     ? constant('Pdo\\Mysql::ATTR_SSL_CA')
     : (defined('PDO::MYSQL_ATTR_SSL_CA') ? constant('PDO::MYSQL_ATTR_SSL_CA') : null);
-$mysqlSslCa = env('MYSQL_ATTR_SSL_CA');
-$mysqlConnectionOptions = extension_loaded('pdo_mysql') && $mysqlAttrSslCa !== null && $mysqlSslCa !== null
-    ? [$mysqlAttrSslCa => $mysqlSslCa]
-    : [];
+$mysqlAttrSslVerifyServerCert = defined('Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT')
+    ? constant('Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT')
+    : (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT') ? constant('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT') : null);
+$mysqlConnectionOptions = [];
+
+if (extension_loaded('pdo_mysql')) {
+    $mysqlSslCa = env('MYSQL_ATTR_SSL_CA');
+
+    if ($mysqlAttrSslCa !== null && $mysqlSslCa !== null) {
+        $mysqlConnectionOptions[$mysqlAttrSslCa] = $mysqlSslCa;
+    }
+
+    if ($mysqlAttrSslVerifyServerCert !== null) {
+        $mysqlConnectionOptions[$mysqlAttrSslVerifyServerCert] = false;
+    }
+}
 
 return [
 
