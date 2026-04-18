@@ -11,10 +11,10 @@ $mysqlAttrSslVerifyServerCert = defined('Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT
 $mysqlConnectionOptions = [];
 
 if (extension_loaded('pdo_mysql')) {
-    $mysqlSslCa = env('MYSQL_ATTR_SSL_CA');
+    $mysqlSslCaPath = env('MYSQL_ATTR_SSL_CA');
 
-    if ($mysqlAttrSslCa !== null && $mysqlSslCa !== null) {
-        $mysqlConnectionOptions[$mysqlAttrSslCa] = $mysqlSslCa;
+    if ($mysqlAttrSslCa !== null && $mysqlSslCaPath !== null) {
+        $mysqlConnectionOptions[$mysqlAttrSslCa] = $mysqlSslCaPath;
     }
 
     if ($mysqlAttrSslVerifyServerCert !== null) {
