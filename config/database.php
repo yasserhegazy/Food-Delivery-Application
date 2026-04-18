@@ -2,6 +2,26 @@
 
 use Illuminate\Support\Str;
 
+$mysqlAttrSslCa = defined('Pdo\\Mysql::ATTR_SSL_CA')
+    ? constant('Pdo\\Mysql::ATTR_SSL_CA')
+    : (defined('PDO::MYSQL_ATTR_SSL_CA') ? constant('PDO::MYSQL_ATTR_SSL_CA') : null);
+$mysqlAttrSslVerifyServerCert = defined('Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT')
+    ? constant('Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT')
+    : (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT') ? constant('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT') : null);
+$mysqlConnectionOptions = [];
+
+if (extension_loaded('pdo_mysql')) {
+    $mysqlSslCaPath = env('MYSQL_ATTR_SSL_CA');
+
+    if ($mysqlAttrSslCa !== null && $mysqlSslCaPath !== null) {
+        $mysqlConnectionOptions[$mysqlAttrSslCa] = $mysqlSslCaPath;
+    }
+
+    if ($mysqlAttrSslVerifyServerCert !== null) {
+        $mysqlConnectionOptions[$mysqlAttrSslVerifyServerCert] = false;
+    }
+}
+
 return [
 
     /*
@@ -58,12 +78,7 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-        
-            // ✅ FIXED SSL CONFIG (PHP 8.5 compatible)
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                \Pdo\Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-                \Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT => false,
-            ]) : [],
+            'options' => $mysqlConnectionOptions,
         ],
 
         'mariadb' => [
@@ -81,12 +96,7 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-        
-            // ✅ FIXED SSL CONFIG (PHP 8.5 compatible)
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                \Pdo\Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-                \Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT => false,
-            ]) : [],
+            'options' => $mysqlConnectionOptions,
         ],
 
         'pgsql' => [
