@@ -58,8 +58,11 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
+        
+            // ✅ FIXED SSL CONFIG (PHP 8.5 compatible)
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                \Pdo\Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                \Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT => false,
             ]) : [],
         ],
 
@@ -78,8 +81,11 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
+        
+            // ✅ FIXED SSL CONFIG (PHP 8.5 compatible)
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                \Pdo\Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                \Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT => false,
             ]) : [],
         ],
 
